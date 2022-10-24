@@ -3,7 +3,7 @@ name: Autobuild
 on:
     push:
         branches:
-            - master
+            - main
     workflow_dispatch:
 
 jobs:
@@ -59,4 +59,4 @@ jobs:
               uses: ad-m/github-push-action@master
               with:
                   github_token: ${{ github.token }}
-                  branch: master
+                  branch: main
