@@ -8,7 +8,7 @@ const plugins = ["ReplaceTimestamps"];
 export default () => {
     const pluginConfigs = plugins.map((pluginName) => {
         return defineConfig({
-            input: `${pluginName}/src/index.ts`,
+            input: `${pluginName}/src/index.tsx`,
             output: [
                 {
                     file: `dist/${pluginName}.js`,
