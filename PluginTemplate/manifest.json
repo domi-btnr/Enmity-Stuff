@@ -1,0 +1,13 @@
+{
+    "name": "PluginTemplate",
+    "version": "1.0.0",
+    "description": "Enmity plugin template",
+    "authors": [
+        {
+            "name": "HypedDomi",
+            "id": "354191516979429376"
+        }
+    ],
+    "color": "#E54B4B",
+    "sourceUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/PluginTemplate.js"
+}

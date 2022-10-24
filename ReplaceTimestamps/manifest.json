@@ -1,0 +1,13 @@
+{
+    "name": "ReplaceTimestamps",
+    "version": "1.0.0",
+    "description": "Replaces plaintext 24 hour timestamps into Discord's timestamps",
+    "authors": [
+        {
+            "name": "HypedDomi",
+            "id": "354191516979429376"
+        }
+    ],
+    "color": "#E54B4B",
+    "sourceUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/ReplaceTimestamps.js"
+}
