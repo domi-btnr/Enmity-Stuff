@@ -44,6 +44,6 @@ export function showUpdateDialog(): void {
         body: `${name} has an update. Do you want to update now?`,
         confirmText: "Update",
         cancelText: "No",
-        onConfirm: installPlugin(`${rawUrl}?${Math.random()}`),
+        onConfirm: () => installPlugin(`${rawUrl}?${Math.random()}`),
     });
 }
