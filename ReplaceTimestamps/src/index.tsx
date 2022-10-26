@@ -1,10 +1,11 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { create } from "enmity/patcher";
-import { Messages } from "enmity/metro/common";
+import { Messages, React } from "enmity/metro/common";
+import Settings from "./components/Settings";
 import manifest from "../manifest.json";
 
 const Patcher = create("ReplaceTimestamps");
-const PluginTemplate: Plugin = {
+const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
         const getUnixTimestamp = (time) => {
@@ -44,6 +45,10 @@ const PluginTemplate: Plugin = {
     onStop() {
         Patcher.unpatchAll();
     },
+
+    getSettingsPanel() {
+        return <Settings />;
+    },
 };
 
-registerPlugin(PluginTemplate);
+registerPlugin(ReplaceTimestamps);
