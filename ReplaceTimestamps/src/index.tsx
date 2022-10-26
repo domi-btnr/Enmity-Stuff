@@ -2,12 +2,17 @@ import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { create } from "enmity/patcher";
 import { Messages, React } from "enmity/metro/common";
 import Settings from "./components/Settings";
+import { hasUpdate, showUpdateDialog } from "./pluginUpdater";
 import manifest from "../manifest.json";
 
 const Patcher = create("ReplaceTimestamps");
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
+        hasUpdate().then((b) => {
+            if (b) showUpdateDialog();
+        });
+
         const getUnixTimestamp = (time) => {
             const date = new Date()
                 .toISOString()

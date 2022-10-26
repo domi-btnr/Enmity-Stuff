@@ -4,16 +4,13 @@
  *   and https://github.com/acquitelol/dislate/blob/main/src/components/Credits.tsx
  */
 
-import { FormRow, ScrollView, FormSection, View, Text } from "enmity/components";
-import { React, Constants, StyleSheet, Navigation, Dialog } from "enmity/metro/common";
-import { name, version, sourceUrl, rawUrl } from "../../manifest.json";
-import { reload } from "enmity/api/native";
+import { FormRow, FormSection, ScrollView, Text, View } from "enmity/components";
+import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
+import { name, sourceUrl, version } from "../../manifest.json";
 import { getByProps } from "enmity/metro";
+import { hasUpdate, showUpdateDialog } from "../pluginUpdater";
 
 const Router = getByProps("transitionToGuild");
-const installPlugin = (url: string) => {
-    return window.enmity.plugins.installPlugin(url);
-};
 
 export default () => {
     const styles = StyleSheet.createThemedStyleSheet({
@@ -83,17 +80,8 @@ export default () => {
                         label="Check for Updates"
                         trailing={FormRow.Arrow}
                         onPress={() => {
-                            /*
-                             * Updater taken from https://github.com/spinfal/enmity-plugins/blob/master/common/components/updateButton.tsx
-                             */
-
-                            installPlugin(`${rawUrl}?${Math.random()}`);
-                            Dialog.show({
-                                title: "Plugin Update",
-                                body: "Updated to the latest version. Would you like to reload Discord now?",
-                                confirmText: "Reload",
-                                cancelText: "Later",
-                                onConfirm: reload,
+                            hasUpdate().then((b) => {
+                                if (b) showUpdateDialog();
                             });
                         }}
                     />
