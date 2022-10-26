@@ -1,8 +1,8 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { create } from "enmity/patcher";
-import { Messages, React } from "enmity/metro/common";
+import { Messages, React, Toasts } from "enmity/metro/common";
 import Settings from "./components/Settings";
-import { hasUpdate, showUpdateDialog } from "./pluginUpdater";
+import { hasUpdate } from "./pluginUpdater";
 import manifest from "../manifest.json";
 
 const Patcher = create("ReplaceTimestamps");
@@ -10,7 +10,7 @@ const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
         hasUpdate().then((b) => {
-            if (b) showUpdateDialog();
+            if (b) Toasts.open({ content: `${manifest.name} has an update` });
         });
 
         const getUnixTimestamp = (time) => {

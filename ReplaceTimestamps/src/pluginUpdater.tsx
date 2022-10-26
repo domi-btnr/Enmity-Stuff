@@ -27,14 +27,13 @@ export async function hasUpdate(): Promise<Boolean> {
 
 const installPlugin = (url: string) => {
     //@ts-ignore
-    window.enmity.plugins.installPlugin(url).then(() => {
-        Dialog.show({
-            title: "Plugin Updater",
-            body: "Updated to the latest version. Would you like to reload Discord now?",
-            confirmText: "Reload",
-            cancelText: "Later",
-            onConfirm: reload,
-        });
+    window.enmity.plugins.installPlugin(url)
+    Dialog.show({
+        title: "Plugin Updater",
+        body: "Updated to the latest version. Would you like to reload Discord now?",
+        confirmText: "Reload",
+        cancelText: "Later",
+        onConfirm: () => reload(),
     });
 };
 

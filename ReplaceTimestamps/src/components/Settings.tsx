@@ -5,7 +5,7 @@
  */
 
 import { FormRow, FormSection, ScrollView, Text, View } from "enmity/components";
-import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
+import { Constants, Navigation, React, StyleSheet, Toasts } from "enmity/metro/common";
 import { name, sourceUrl, version } from "../../manifest.json";
 import { getByProps } from "enmity/metro";
 import { hasUpdate, showUpdateDialog } from "../pluginUpdater";
@@ -82,6 +82,7 @@ export default () => {
                         onPress={() => {
                             hasUpdate().then((b) => {
                                 if (b) showUpdateDialog();
+                                else Toasts.open({ content: "You're already on the latest version" });
                             });
                         }}
                     />
