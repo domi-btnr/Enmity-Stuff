@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { name, rawUrl, version } from "../manifest.json";
+import { changelog, name, rawUrl, version } from "../manifest.json";
 import { Dialog } from "enmity/metro/common";
 import { reload } from "enmity/api/native";
 import { set } from "enmity/api/settings";
@@ -46,8 +46,18 @@ export function showUpdateDialog(): void {
         confirmText: "Update",
         cancelText: "No",
         onConfirm: () => {
-            set(name, "update", true);
+            set(name, "_didUpdate", true);
+            set(name, "_changelog", false);
             installPlugin(`${rawUrl}?${Math.random()}`);
         },
+    });
+}
+
+export function showChangelog(): void {
+    Dialog.show({
+        title: `${name} - v${version}`,
+        body: `- ${changelog.join("\n- ")}`,
+        confirmText: "OK",
+        onConfirm: () => set(name, "_changelog", true),
     });
 }

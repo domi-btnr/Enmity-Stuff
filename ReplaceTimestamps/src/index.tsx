@@ -3,19 +3,22 @@ import { create } from "enmity/patcher";
 import { Messages, React } from "enmity/metro/common";
 import { get, set } from "enmity/api/settings";
 import Settings from "./components/Settings";
-import { hasUpdate, showUpdateDialog } from "./pluginUpdater";
+import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
 import manifest from "../manifest.json";
 
 const Patcher = create("ReplaceTimestamps");
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
-        if (!get(manifest.name, "update", false) && get(manifest.name, "autoUpdateCheck", true)) {
-            hasUpdate().then((b) => {
-                if (b) showUpdateDialog();
-            });
+        if (!get(manifest.name, "_didUpdate", false)) {
+            if (get(manifest.name, "autoUpdateCheck", true)) {
+                hasUpdate().then((b) => {
+                    if (b) showUpdateDialog();
+                });
+            }
+            if (!get(manifest.name, "_changelog", false)) showChangelog();
         }
-        set(manifest.name, "update", false);
+        set(manifest.name, "_didUpdate", false);
 
         const getUnixTimestamp = (time) => {
             const date = new Date()
@@ -29,8 +32,8 @@ const ReplaceTimestamps: Plugin = {
         };
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
-            const regexAGlobal = /(?<!\d)\d{1,2}:\d{2}(?!\d)(am|pm)?/gi;
-            const regexA = /((?<!\d)\d{1,2}:\d{2}(?!\d))(am|pm)?/i;
+            const regexAGlobal = /(?<!\d)\d{1,2}:\d{2}(?!\d)\s?(am|pm)?/gi;
+            const regexA = /((?<!\d)\d{1,2}:\d{2}(?!\d))\s?(am|pm)?/i;
             if (msg.content.search(regexAGlobal) !== -1)
                 msg.content = msg.content.replace(regexAGlobal, (x) => {
                     let [, time, mode] = x.match(regexA);
