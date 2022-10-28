@@ -1,17 +1,21 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { create } from "enmity/patcher";
-import { Messages, React, Toasts } from "enmity/metro/common";
+import { Messages, React } from "enmity/metro/common";
+import { get, set } from "enmity/api/settings";
 import Settings from "./components/Settings";
-import { hasUpdate } from "./pluginUpdater";
+import { hasUpdate, showUpdateDialog } from "./pluginUpdater";
 import manifest from "../manifest.json";
 
 const Patcher = create("ReplaceTimestamps");
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
-        hasUpdate().then((b) => {
-            if (b) Toasts.open({ content: `${manifest.name} has an update` });
-        });
+        if (!get(manifest.name, "update", false) && get(manifest.name, "autoUpdateCheck", true)) {
+            hasUpdate().then((b) => {
+                if (b) showUpdateDialog();
+            });
+        }
+        set(manifest.name, "update", false);
 
         const getUnixTimestamp = (time) => {
             const date = new Date()
@@ -51,8 +55,8 @@ const ReplaceTimestamps: Plugin = {
         Patcher.unpatchAll();
     },
 
-    getSettingsPanel() {
-        return <Settings />;
+    getSettingsPanel({ settings }) {
+        return <Settings settings={settings} />;
     },
 };
 

@@ -1,12 +1,15 @@
+// @ts-nocheck
+
 import { name, rawUrl, version } from "../manifest.json";
 import { Dialog } from "enmity/metro/common";
 import { reload } from "enmity/api/native";
+import { set } from "enmity/api/settings";
 
 export async function hasUpdate(): Promise<Boolean> {
     const resp = await fetch(`${rawUrl}?${Math.random()}`);
     const content = await resp.text();
     let remoteVersion = content.match(/[0-9].[0-9].[0-9]/g);
-    if (!remoteVersion) return false;
+    if (!remoteVersion?.length) return false;
     remoteVersion = remoteVersion[0].replace('"', "");
     remoteVersion = remoteVersion.split(".").map((e) => {
         return parseInt(e);
@@ -26,8 +29,7 @@ export async function hasUpdate(): Promise<Boolean> {
 }
 
 const installPlugin = (url: string) => {
-    //@ts-ignore
-    window.enmity.plugins.installPlugin(url)
+    window.enmity.plugins.installPlugin(url);
     Dialog.show({
         title: "Plugin Updater",
         body: "Updated to the latest version. Would you like to reload Discord now?",
@@ -40,9 +42,12 @@ const installPlugin = (url: string) => {
 export function showUpdateDialog(): void {
     Dialog.show({
         title: "Plugin Updater",
-        body: `${name} has an update. Do you want to update now?`,
+        body: `**${name}** has an update. Do you want to update now?`,
         confirmText: "Update",
         cancelText: "No",
-        onConfirm: () => installPlugin(`${rawUrl}?${Math.random()}`),
+        onConfirm: () => {
+            set(name, "update", true);
+            installPlugin(`${rawUrl}?${Math.random()}`);
+        },
     });
 }

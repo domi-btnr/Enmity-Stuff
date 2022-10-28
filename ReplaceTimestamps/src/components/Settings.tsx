@@ -4,15 +4,20 @@
  *   and https://github.com/acquitelol/dislate/blob/main/src/components/Credits.tsx
  */
 
-import { FormRow, FormSection, ScrollView, Text, View } from "enmity/components";
-import { Constants, Navigation, React, StyleSheet, Toasts } from "enmity/metro/common";
-import { name, sourceUrl, version } from "../../manifest.json";
+import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
+import { Constants, Dialog, Navigation, React, StyleSheet, Toasts } from "enmity/metro/common";
+import { authors, name, sourceUrl, version } from "../../manifest.json";
+import { SettingsStore } from "enmity/api/settings";
 import { getByProps } from "enmity/metro";
 import { hasUpdate, showUpdateDialog } from "../pluginUpdater";
 
+interface SettingsProps {
+    settings: SettingsStore;
+}
+
 const Router = getByProps("transitionToGuild");
 
-export default () => {
+export default ({ settings }: SettingsProps) => {
     const styles = StyleSheet.createThemedStyleSheet({
         item: { color: Constants.ThemeColorMap.TEXT_MUTED },
         text_container: {
@@ -61,6 +66,18 @@ export default () => {
                     <View style={styles.text_container}>
                         <Text style={[styles.main_text, styles.header]}>{name}</Text>
                         <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.main_text, styles.sub_header]}>Author:</Text>
+                            <Text
+                                style={[
+                                    styles.main_text,
+                                    styles.sub_header,
+                                    { paddingLeft: 4, fontFamily: Constants.Fonts.DISPLAY_BOLD },
+                                ]}
+                            >
+                                {` ${authors.map((a) => a.name).join(", ")}`}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: "row" }}>
                             <Text style={[styles.main_text, styles.sub_header]}>Version:</Text>
                             <Text
                                 style={[
@@ -69,23 +86,39 @@ export default () => {
                                     { paddingLeft: 4, fontFamily: Constants.Fonts.DISPLAY_BOLD },
                                 ]}
                             >
-                                {" "}
-                                {version}
+                                {` ${version}`}
                             </Text>
                         </View>
                     </View>
                 </View>
-                <FormSection title="Source">
+                <FormSection title="Updates">
+                    <FormRow
+                        label="Check for Updates on startup"
+                        subLabel={"Checks automatically for updates when starting the Plugin"}
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("autoUpdateCheck", true)}
+                                onValueChange={() => settings.toggle("autoUpdateCheck", true)}
+                            />
+                        }
+                    />
                     <FormRow
                         label="Check for Updates"
                         trailing={FormRow.Arrow}
                         onPress={() => {
                             hasUpdate().then((b) => {
                                 if (b) showUpdateDialog();
-                                else Toasts.open({ content: "You're already on the latest version" });
+                                else
+                                    Dialog.show({
+                                        title: "Plugin Updater",
+                                        body: `**${name}** is already on the latest version (**${version}**)`,
+                                        confirmText: "OK",
+                                    });
                             });
                         }}
                     />
+                </FormSection>
+                <FormSection title="Source">
                     <FormRow
                         label="Source"
                         subLabel={`See the Source Code for ${name}`}
