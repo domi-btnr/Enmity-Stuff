@@ -29,13 +29,16 @@ export async function hasUpdate(): Promise<Boolean> {
 }
 
 const installPlugin = (url: string) => {
-    window.enmity.plugins.installPlugin(url);
-    Dialog.show({
-        title: "Plugin Updater",
-        body: "Updated to the latest version. Would you like to reload Discord now?",
-        confirmText: "Reload",
-        cancelText: "Later",
-        onConfirm: () => reload(),
+    window.enmity.plugins.installPlugin(url, ({ data }) => {
+        data == "installed-plugin" || data == "overriden-plugin"
+            ? Dialog.show({
+                  title: `Updated ${name}`,
+                  body: `Successfully updated to version ${version}. Would you like to reload Discord now?`,
+                  confirmText: "Reload",
+                  cancelText: "Later",
+                  onConfirm: () => reload(),
+              })
+            : console.log(`[${name}] Plugin failed to update to version ${version}.`);
     });
 };
 

@@ -32,11 +32,14 @@ const ReplaceTimestamps: Plugin = {
         };
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
-            const REGEX =
-                /(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))/i; /* Thank you King Fish */
+            let REGEX =
+                /(?:^| )(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Thank you King Fish */
             if (msg.content.search(REGEX) !== -1)
                 msg.content = msg.content.replace(REGEX, (x) => {
-                    let [, hours, minutes, mode, hours2, mode2] = x.match(REGEX);
+                    REGEX =
+                        /(?:^| )(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Reset REGEX */
+                    let [, hours, minutes, mode, hours2, mode2] = REGEX.exec(x);
+                    console.log(`[ReplaceTimestamps] ${hours}, ${minutes}, ${mode}, ${hours2}, ${mode2}`);
                     [hours, minutes] = [hours ? hours : hours2, minutes ? minutes : "00"].map((i) => parseInt(i));
                     let time = `${hours}:${minutes}`;
                     mode = mode ? mode : mode2;
