@@ -9,7 +9,7 @@ import { Constants, Dialog, Navigation, React, StyleSheet, Toasts } from "enmity
 import { authors, name, sourceUrl, version } from "../../manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { getByProps } from "enmity/metro";
-import { hasUpdate, showUpdateDialog } from "../pluginUpdater";
+import { hasUpdate, showChangelog, showUpdateDialog } from "../pluginUpdater";
 
 interface SettingsProps {
     settings: SettingsStore;
@@ -116,6 +116,12 @@ export default ({ settings }: SettingsProps) => {
                                     });
                             });
                         }}
+                    />
+                    <FormRow
+                        label="Show Changelog"
+                        subLabel={`Shows the changelog for v${version}`}
+                        trailing={FormRow.Arrow}
+                        onPress={() => showChangelog()}
                     />
                 </FormSection>
                 <FormSection title="Source">

@@ -47,7 +47,6 @@ export function showUpdateDialog(): void {
         cancelText: "No",
         onConfirm: () => {
             set(name, "_didUpdate", true);
-            set(name, "_changelog", false);
             installPlugin(`${rawUrl}?${Math.random()}`);
         },
     });
@@ -58,6 +57,6 @@ export function showChangelog(): void {
         title: `${name} - v${version}`,
         body: `- ${changelog.join("\n- ")}`,
         confirmText: "OK",
-        onConfirm: () => set(name, "_changelog", true),
+        onConfirm: () => set(name, "_changelog", version),
     });
 }

@@ -16,7 +16,7 @@ const ReplaceTimestamps: Plugin = {
                     if (b) showUpdateDialog();
                 });
             }
-            if (!get(manifest.name, "_changelog", false)) showChangelog();
+            if (get(manifest.name, "_changelog", manifest.version) !== manifest.version) showChangelog();
         }
         set(manifest.name, "_didUpdate", false);
 
@@ -32,23 +32,20 @@ const ReplaceTimestamps: Plugin = {
         };
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
-            const regexAGlobal = /(?<!\d)\d{1,2}:\d{2}(?!\d)\s?(am|pm)?/gi;
-            const regexA = /((?<!\d)\d{1,2}:\d{2}(?!\d))\s?(am|pm)?/i;
-            if (msg.content.search(regexAGlobal) !== -1)
-                msg.content = msg.content.replace(regexAGlobal, (x) => {
-                    let [, time, mode] = x.match(regexA);
-                    let [hours, minutes] = time.split(":").map((e) => parseInt(e));
+            const REGEX =
+                /(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))/i; /* Thank you King Fish */
+            if (msg.content.search(REGEX) !== -1)
+                msg.content = msg.content.replace(REGEX, (x) => {
+                    let [, hours, minutes, mode, hours2, mode2] = x.match(REGEX);
+                    [hours, minutes] = [hours ? hours : hours2, minutes ? minutes : "00"].map((i) => parseInt(i));
+                    let time = `${hours}:${minutes}`;
+                    mode = mode ? mode : mode2;
                     if (mode && mode.toLowerCase() === "pm" && hours < 12 && hours !== 0) {
                         hours += 12;
                         minutes = minutes.toString().padStart(2, "0");
                         time = `${hours}:${minutes}`;
                     } else if ((mode && mode.toLowerCase() === "am" && hours === 12) || hours === 24)
                         time = `00:${minutes}`;
-                    else if (minutes >= 60) {
-                        hours += Math.floor(minutes / 60);
-                        minutes = minutes % 60;
-                        time = `${hours}:${minutes}`;
-                    }
                     return getUnixTimestamp(time);
                 });
         });
