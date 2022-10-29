@@ -1,6 +1,6 @@
 {
     "name": "ReplaceTimestamps",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "description": "Replaces plaintext 24 hour timestamps into Discord's timestamps",
     "authors": [
         {

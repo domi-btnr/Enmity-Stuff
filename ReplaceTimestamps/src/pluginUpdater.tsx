@@ -30,7 +30,7 @@ export async function hasUpdate(): Promise<Boolean> {
 
 const installPlugin = (url: string) => {
     window.enmity.plugins.installPlugin(url, ({ data }) => {
-        data == "installed-plugin" || data == "overriden-plugin"
+        data == "installed_plugin" || data == "overridden_plugin"
             ? Dialog.show({
                   title: `Updated ${name}`,
                   body: `Successfully updated to version ${version}. Would you like to reload Discord now?`,
@@ -38,7 +38,7 @@ const installPlugin = (url: string) => {
                   cancelText: "Later",
                   onConfirm: () => reload(),
               })
-            : console.log(`[${name}] Plugin failed to update to version ${version}.`);
+            : console.log(`[${name}] Plugin failed to update to version ${version}`);
     });
 };
 
