@@ -8,7 +8,7 @@ import { set } from "enmity/api/settings";
 export async function hasUpdate(): Promise<Boolean> {
     const resp = await fetch(`${rawUrl}?${Math.random()}`);
     const content = await resp.text();
-    let remoteVersion = content.match(/[0-9].[0-9].[0-9]/g);
+    let remoteVersion = content.match(/\d\.\d\.\d{1,}/g);
     if (!remoteVersion?.length) return false;
     remoteVersion = remoteVersion[0].replace('"', "");
     remoteVersion = remoteVersion.split(".").map((e) => {

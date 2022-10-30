@@ -28,7 +28,7 @@ const ReplaceTimestamps: Plugin = {
                 .replace(/\d?\d:\d\d/, time);
             const then = Math.round(new Date(date).getTime() / 1000);
             if (isNaN(then)) return time;
-            return `<t:${then}:t>`;
+            return ` <t:${then}:t> `;
         };
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
