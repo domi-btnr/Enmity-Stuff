@@ -38,8 +38,8 @@ const ReplaceTimestamps: Plugin = {
                 msg.content = msg.content.replace(REGEX, (x) => {
                     REGEX =
                         /(?:^| )(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Reset REGEX */
+                    // @ts-ignore
                     let [, hours, minutes, mode, hours2, mode2] = REGEX.exec(x);
-                    console.log(`[ReplaceTimestamps] ${hours}, ${minutes}, ${mode}, ${hours2}, ${mode2}`);
                     [hours, minutes] = [hours ? hours : hours2, minutes ? minutes : "00"].map((i) => parseInt(i));
                     let time = `${hours}:${minutes}`;
                     mode = mode ? mode : mode2;

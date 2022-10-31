@@ -6,7 +6,7 @@
 
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
 import { Constants, Dialog, Navigation, React, StyleSheet, Toasts } from "enmity/metro/common";
-import { authors, name, sourceUrl, version } from "../../manifest.json";
+import { authors, changelog, name, sourceUrl, version } from "../../manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { getByProps } from "enmity/metro";
 import { hasUpdate, showChangelog, showUpdateDialog } from "../pluginUpdater";
@@ -122,6 +122,7 @@ export default ({ settings }: SettingsProps) => {
                         subLabel={`Shows the changelog for v${version}`}
                         trailing={FormRow.Arrow}
                         onPress={() => showChangelog()}
+                        disabled={!changelog.length}
                     />
                 </FormSection>
                 <FormSection title="Source">

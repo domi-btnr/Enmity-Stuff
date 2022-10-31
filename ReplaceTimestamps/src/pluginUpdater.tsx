@@ -8,7 +8,7 @@ import { set } from "enmity/api/settings";
 export async function hasUpdate(): Promise<Boolean> {
     const resp = await fetch(`${rawUrl}?${Math.random()}`);
     const content = await resp.text();
-    let remoteVersion = content.match(/\d\.\d\.\d{1,}/g);
+    let remoteVersion = content.match(/\d\.\d\.\d+/g);
     if (!remoteVersion?.length) return false;
     remoteVersion = remoteVersion[0].replace('"', "");
     remoteVersion = remoteVersion.split(".").map((e) => {
@@ -29,11 +29,17 @@ export async function hasUpdate(): Promise<Boolean> {
 }
 
 const installPlugin = (url: string) => {
+    let newVersion = [];
+    fetch(url)
+        .then((resp) => resp.text())
+        .then((content) => (newVersion = content.match(/\d\.\d\.\d+/g)));
     window.enmity.plugins.installPlugin(url, ({ data }) => {
         data == "installed_plugin" || data == "overridden_plugin"
             ? Dialog.show({
                   title: `Updated ${name}`,
-                  body: `Successfully updated to version ${version}. Would you like to reload Discord now?`,
+                  body: `Successfully updated to version **${
+                      newVersion?.length ? newVersion[0] : version
+                  }**. Would you like to reload Discord now?`,
                   confirmText: "Reload",
                   cancelText: "Later",
                   onConfirm: () => reload(),
@@ -56,6 +62,7 @@ export function showUpdateDialog(): void {
 }
 
 export function showChangelog(): void {
+    if (!changelog.length) return;
     Dialog.show({
         title: `${name} - v${version}`,
         body: `- ${changelog.join("\n- ")}`,
