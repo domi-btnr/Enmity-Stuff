@@ -6,7 +6,7 @@ import Settings from "./components/Settings";
 import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
 import manifest from "../manifest.json";
 
-const Patcher = create("ReplaceTimestamps");
+const Patcher = create(manifest.name);
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
@@ -33,11 +33,11 @@ const ReplaceTimestamps: Plugin = {
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
             let REGEX =
-                /(?:^| )(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m{1}?))?|([0-2]?[1-9])(?: ?([ap]m{1}?)))(?:$| )/gim; /* Thank you King Fish */
+                /(?:^| )(?:([01][0-9]|2?[0-4]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Thank you King Fish */
             if (msg.content.search(REGEX) !== -1)
                 msg.content = msg.content.replace(REGEX, (x) => {
                     REGEX =
-                        /(?:^| )(?:([0-2]?[1-9]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Reset REGEX */
+                        /(?:^| )(?:([01][0-9]|2?[0-4]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Reset REGEX */
                     // @ts-ignore
                     let [, hours, minutes, mode, hours2, mode2] = REGEX.exec(x);
                     [hours, minutes] = [hours ? hours : hours2, minutes ? minutes : "00"].map((i) => parseInt(i));
