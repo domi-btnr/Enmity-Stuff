@@ -95,9 +95,9 @@ const GlobalBadges: Plugin = {
                         if (group[badge] && typeof group[badge] !== "object") globalBadges.push(<Badge name={BADGES[key][badge].name} img={BADGES[key][badge].img} />);
                     }
                 }
-                console.log(globalBadges);
                 if (!globalBadges.length) return res;
-                res.props.children = [...res.props.children, ...globalBadges];
+                if (res.props.badges) res.props.badges.push(...globalBadges);
+                else res.props.children.push(...globalBadges);
             });
         }
     },
