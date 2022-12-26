@@ -13,7 +13,7 @@ const cache = new Map<string, BadgeCache>();
 const EXPIRES = 1000 * 60 * 15;
 
 const BADGES = {
-    aliu: {
+    aliucord: {
         dev: {
             name: "Aliucord Developer",
             img: "https://cdn.discordapp.com/emojis/860599530956783656.png"
@@ -27,17 +27,33 @@ const BADGES = {
             img: "https://cdn.discordapp.com/emojis/894346480943530015.png"
         }
     },
-    bd: {
-        dev: {
+    betterdiscord: {
+        developer: {
             name: "BetterDiscord Developer",
             img: "https://cdn.discordapp.com/emojis/1019671156523012136.png"
+        }
+    },
+    velocity: {
+        developer: {
+            name: "Velocity Developer",
+            img: "https://cdn.discordapp.com/emojis/959998683770941460.png"
+        },
+        translator: {
+            name: "Velocity Translator",
+            img: "https://cdn.discordapp.com/emojis/959998683770941460.png"
+        }
+    },
+    vencord: {
+        contributor: {
+            name: "Vencord Contributor",
+            img: "https://media.discordapp.net/stickers/1026517526106087454.png"
         }
     }
 };
 
 const fetchBadges = (id: string, setBadges: Function) => {
     if (!cache.has(id) || cache.get(id)?.expires < Date.now()) {
-        fetch(`https://api.obamabot.me/v2/text/badges?user=${id}`)
+        fetch(`https://clientmodbadges-api.herokuapp.com/users?user=${id}`)
             .then((res) => res.json() as Promise<CustomBadges>)
             .then((body) => {
                 cache.set(id, { badges: body, expires: Date.now() + EXPIRES });
@@ -87,14 +103,18 @@ const GlobalBadges: Plugin = {
             Patcher.after(profileBadge, "default", (_, [{ user: { id } }], res) => {
                 const [badges, setBadges] = React.useState({} as CustomBadges);
                 React.useEffect(() => fetchBadges(id, setBadges), []);
-                if (Object.keys(badges).length === 0 && badges.constructor === Object) return;
                 const globalBadges = [];
-                for (const key in badges) {
-                    const group = badges[key];
-                    for (const badge in group) {
-                        if (group[badge] && typeof group[badge] !== "object") globalBadges.push(<Badge name={BADGES[key][badge].name} img={BADGES[key][badge].img} />);
-                    }
-                }
+                Object.keys(badges).forEach((mod) => {
+                    badges[mod].forEach((badge) => {
+                        if (mod == "velocity") badge = badge.replace("Velocity ", "");
+                        const [name, extra] = badge.toLowerCase().split(" ");
+                        if (BADGES[mod] && BADGES[mod][name]) {
+                            const badgeName = extra ? `${BADGES[mod][name].name} ${extra}` : BADGES[mod][name].name;
+                            globalBadges.push(<Badge name={badgeName} img={BADGES[mod][name].img} />);
+                        }
+                    });
+                });
+                
                 if (!globalBadges.length) return res;
                 if (res.props.badges) res.props.badges.push(...globalBadges);
                 else res.props.children.push(...globalBadges);
