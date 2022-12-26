@@ -4,7 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import esbuild from "rollup-plugin-esbuild";
 
-const plugins = ["ReplaceTimestamps"];
+const plugins = ["GlobalBadges", "ReplaceTimestamps"];
 export default () => {
     const pluginConfigs = plugins.map((pluginName) => {
         return defineConfig({
