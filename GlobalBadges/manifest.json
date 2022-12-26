@@ -1,6 +1,6 @@
 {
     "name": "GlobalBadges",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Adds global badges from other client mods",
     "authors": [
         {
@@ -10,6 +10,6 @@
     ],
     "color": "#E54B4B",
     "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/GlobalBadges.js",
-    "sourceUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/GlobalBadges.js",
-    "changelog": ["Initial Release"]
+    "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/GlobalBadges",
+    "changelog": ["Initial Release", "Fixed Source URL"]
 }
