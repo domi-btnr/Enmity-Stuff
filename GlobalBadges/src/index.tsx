@@ -9,51 +9,69 @@ import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
 import manifest from "../manifest.json";
 import { BadgeCache, CustomBadges } from "./types";
 
+const API_URL = "https://clientmodbadges-api.herokuapp.com/";
+
 const cache = new Map<string, BadgeCache>();
 const EXPIRES = 1000 * 60 * 15;
 
 const BADGES = {
     aliucord: {
         dev: {
-            name: "Aliucord Developer",
-            img: "https://cdn.discordapp.com/emojis/860599530956783656.png"
+            name: "Aliucord Developer"
         },
         donor: {
-            name: "Aliucord Donor",
-            img: "https://cdn.discordapp.com/emojis/859801776232202280.png"
+            name: "Aliucord Donor"
         },
         contributor: {
-            name: "Aliucord Contributor",
-            img: "https://cdn.discordapp.com/emojis/894346480943530015.png"
+            name: "Aliucord Contributor"
         }
     },
     betterdiscord: {
         developer: {
-            name: "BetterDiscord Developer",
-            img: "https://cdn.discordapp.com/emojis/1019671156523012136.png"
+            name: "BetterDiscord Developer"
+        }
+    },
+    replugged: {
+        developer: {
+            name: "Replugged Developer"
+        },
+        staff: {
+            name: "Replugged Staff"
+        },
+        support: {
+            name: "Replugged Support"
+        },
+        contributor: {
+            name: "Replugged Contributor"
+        },
+        translator: {
+            name: "Replugged Translator"
+        },
+        hunter: {
+            name: "Replugged Bug Hunter"
+        },
+        early: {
+            name: "Replugged Early User"
         }
     },
     velocity: {
         developer: {
-            name: "Velocity Developer",
-            img: "https://cdn.discordapp.com/emojis/959998683770941460.png"
+            name: "Velocity Developer"
         },
         translator: {
-            name: "Velocity Translator",
-            img: "https://cdn.discordapp.com/emojis/959998683770941460.png"
+            name: "Velocity Translator"
         }
     },
     vencord: {
         contributor: {
-            name: "Vencord Contributor",
-            img: "https://media.discordapp.net/stickers/1026517526106087454.png"
+            name: "Vencord Contributor"
         }
     }
 };
 
 const fetchBadges = (id: string, setBadges: Function) => {
     if (!cache.has(id) || cache.get(id)?.expires < Date.now()) {
-        fetch(`https://clientmodbadges-api.herokuapp.com/users?user=${id}`)
+        fetch(`${API_URL}users/${id}`)
             .then((res) => res.json() as Promise<CustomBadges>)
             .then((body) => {
                 cache.set(id, { badges: body, expires: Date.now() + EXPIRES });
@@ -107,10 +125,11 @@ const GlobalBadges: Plugin = {
                 Object.keys(badges).forEach((mod) => {
                     badges[mod].forEach((badge) => {
                         if (mod == "velocity") badge = badge.replace("Velocity ", "");
-                        const [name, extra] = badge.toLowerCase().split(" ");
+                        let [name, extra] = badge.split(" ");
+                        name = name.toLowerCase();
                         if (BADGES[mod] && BADGES[mod][name]) {
                             const badgeName = extra ? `${BADGES[mod][name].name} ${extra}` : BADGES[mod][name].name;
-                            globalBadges.push(<Badge name={badgeName} img={BADGES[mod][name].img} />);
+                            globalBadges.push(<Badge name={badgeName} img={`${API_URL}badges/${mod}/${name}`} />);
                         }
                     });
                 });
