@@ -14,64 +14,6 @@ const API_URL = "https://clientmodbadges-api.herokuapp.com/";
 const cache = new Map<string, BadgeCache>();
 const EXPIRES = 1000 * 60 * 15;
 
-const BADGES = {
-    aliucord: {
-        dev: {
-            name: "Aliucord Developer"
-        },
-        donor: {
-            name: "Aliucord Donor"
-        },
-        contributor: {
-            name: "Aliucord Contributor"
-        }
-    },
-    betterdiscord: {
-        developer: {
-            name: "BetterDiscord Developer"
-        }
-    },
-    replugged: {
-        developer: {
-            name: "Replugged Developer"
-        },
-        staff: {
-            name: "Replugged Staff"
-        },
-        support: {
-            name: "Replugged Support"
-        },
-        contributor: {
-            name: "Replugged Contributor"
-        },
-        translator: {
-            name: "Replugged Translator"
-        },
-        hunter: {
-            name: "Replugged Bug Hunter"
-        },
-        early: {
-            name: "Replugged Early User"
-        }
-    },
-    velocity: {
-        developer: {
-            name: "Velocity Developer"
-        },
-        early: {
-            name: "Velocity Early"
-        },
-        translator: {
-            name: "Velocity Translator"
-        }
-    },
-    vencord: {
-        contributor: {
-            name: "Vencord Contributor"
-        }
-    }
-};
-
 const fetchBadges = (id: string, setBadges: Function) => {
     if (!cache.has(id) || cache.get(id)?.expires < Date.now()) {
         fetch(`${API_URL}users/${id}`)
@@ -124,19 +66,23 @@ const GlobalBadges: Plugin = {
             Patcher.after(profileBadge, "default", (_, [{ user: { id } }], res) => {
                 const [badges, setBadges] = React.useState({} as CustomBadges);
                 React.useEffect(() => fetchBadges(id, setBadges), []);
-                const globalBadges = [];
+                const globalBadges: any[] = []
+                if (!badges) return res;
                 Object.keys(badges).forEach((mod) => {
+                    if (mod.toLowerCase() === "enmity") return;
                     badges[mod].forEach((badge) => {
-                        if (mod == "velocity") badge = badge.replace("Velocity ", "");
-                        let [name, extra] = badge.split(" ");
-                        name = name.toLowerCase();
-                        if (BADGES[mod] && BADGES[mod][name]) {
-                            const badgeName = extra ? `${BADGES[mod][name].name} ${extra}` : BADGES[mod][name].name;
-                            globalBadges.push(<Badge name={badgeName} img={`${API_URL}badges/${mod}/${name}`} />);
+                        const badgeImg = `${API_URL}badges/${mod}/${badge.replace(mod, "").trim().split(" ")[0]}`;
+                        const _ = {
+                            "hunter": "Bug Hunter",
+                            "early": "Early User"
                         }
+                        if (_[badge]) badge = _[badge];
+                        const cleanName = badge.replace(mod, "").trim();
+                        const badgeName = `${mod} ${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)}`;
+                        globalBadges.push(<Badge name={badgeName} img={badgeImg} />);
                     });
                 });
-                
+
                 if (!globalBadges.length) return res;
                 if (res.props.badges) res.props.badges.push(...globalBadges);
                 else res.props.children.push(...globalBadges);
