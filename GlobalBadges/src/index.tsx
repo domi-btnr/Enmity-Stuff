@@ -58,6 +58,9 @@ const BADGES = {
         developer: {
             name: "Velocity Developer"
         },
+        early: {
+            name: "Velocity Early"
+        },
         translator: {
             name: "Velocity Translator"
         }
