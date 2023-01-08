@@ -5,7 +5,7 @@
  */
 
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
-import { Constants, Dialog, Navigation, React, StyleSheet, Toasts } from "enmity/metro/common";
+import { Constants, Dialog, Navigation, React, StyleSheet } from "enmity/metro/common";
 import { authors, changelog, name, sourceUrl, version } from "../../manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { getByProps } from "enmity/metro";
@@ -91,6 +91,58 @@ export default ({ settings }: SettingsProps) => {
                         </View>
                     </View>
                 </View>
+                <FormSection title="Badges">
+                    <FormRow
+                        label="Aliucord"
+                        subLabel="Show Aliucord Badges"
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("showAliucord", true)}
+                                onValueChange={() => settings.toggle("showAliucord", true)}
+                            />
+                        }
+                    />
+                    <FormRow
+                        label="BetterDiscord"
+                        subLabel="Show BetterDiscord Badges"
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("showBetterDiscord", true)}
+                                onValueChange={() => settings.toggle("showBetterDiscord", true)}
+                            />
+                        }
+                    />
+                    <FormRow
+                        label="Replugged"
+                        subLabel="Show Replugged Badges"
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("showReplugged", true)}
+                                onValueChange={() => settings.toggle("showReplugged", true)}
+                            />
+                        }
+                    />
+                    <FormRow
+                        label="Velocity"
+                        subLabel="Show Velocity Badges"
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("showVelocity", true)}
+                                onValueChange={() => settings.toggle("showVelocity", true)}
+                            />
+                        }
+                    />
+                    <FormRow
+                        label="Vencord"
+                        subLabel="Show Vencord Badges"
+                        trailing={
+                            <FormSwitch
+                                value={settings.getBoolean("showVencord", true)}
+                                onValueChange={() => settings.toggle("showVencord", true)}
+                            />
+                        }
+                    />
+                </FormSection>
                 <FormSection title="Updates">
                     <FormRow
                         label="Check for Updates on startup"

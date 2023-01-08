@@ -69,7 +69,7 @@ const GlobalBadges: Plugin = {
                 const globalBadges: any[] = []
                 if (!badges) return res;
                 Object.keys(badges).forEach((mod) => {
-                    if (mod.toLowerCase() === "enmity") return;
+                    if (mod.toLowerCase() === "enmity" || !get(manifest.name, `show${mod}`, true)) return;
                     badges[mod].forEach((badge) => {
                         const badgeImg = `${API_URL}badges/${mod}/${badge.replace(mod, "").trim().split(" ")[0]}`;
                         const _ = {
