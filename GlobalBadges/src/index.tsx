@@ -69,17 +69,21 @@ const GlobalBadges: Plugin = {
                 const globalBadges: any[] = []
                 if (!badges) return res;
                 Object.keys(badges).forEach((mod) => {
-                    if (mod.toLowerCase() === "enmity" || !get(manifest.name, `show${mod}`, true)) return;
-                    badges[mod].forEach((badge) => {
-                        const badgeImg = `${API_URL}badges/${mod}/${badge.replace(mod, "").trim().split(" ")[0]}`;
-                        const _ = {
-                            "hunter": "Bug Hunter",
-                            "early": "Early User"
-                        }
-                        if (_[badge]) badge = _[badge];
-                        const cleanName = badge.replace(mod, "").trim();
-                        const badgeName = `${mod} ${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)}`;
-                        globalBadges.push(<Badge name={badgeName} img={badgeImg} />);
+                    if (mod.toLowerCase() === "enmity") return;
+                    badges[mod].forEach(badge => {
+                        if (typeof badge === "string") {
+                            const fullNames = { "hunter": "Bug Hunter", "early": "Early User" };
+                            if (fullNames[badge]) badge = fullNames[badge];
+                            badge = {
+                                name: badge,
+                                badge: `${API_URL}badges/${mod}/${badge.replace(mod, "").trim().split(" ")[0]}`
+                            };
+                        } else if (typeof badge === "object") badge.custom = true;
+                        if (!get(manifest.name, "showCustom", true) && badge.custom) return;
+                        const cleanName = badge.name.replace(mod, "").trim();
+                        const prefix = get(manifest.name, "showPrefix", true) ? mod : "";
+                        if (!badge.custom) badge.name = `${prefix} ${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)}`;
+                        globalBadges.push(<Badge name={badge.name} img={badge.badge} />);
                     });
                 });
 

@@ -93,52 +93,22 @@ export default ({ settings }: SettingsProps) => {
                 </View>
                 <FormSection title="Badges">
                     <FormRow
-                        label="Aliucord"
-                        subLabel="Show Aliucord Badges"
+                        label="Prefix"
+                        subLabel="Shows the Mod as Prefix"
                         trailing={
                             <FormSwitch
-                                value={settings.getBoolean("showAliucord", true)}
-                                onValueChange={() => settings.toggle("showAliucord", true)}
+                                value={settings.getBoolean("showPrefix", true)}
+                                onValueChange={() => settings.toggle("showPrefix", true)}
                             />
                         }
                     />
                     <FormRow
-                        label="BetterDiscord"
-                        subLabel="Show BetterDiscord Badges"
+                        label="Custom Badges"
+                        subLabel="Show Custom Badges"
                         trailing={
                             <FormSwitch
-                                value={settings.getBoolean("showBetterDiscord", true)}
-                                onValueChange={() => settings.toggle("showBetterDiscord", true)}
-                            />
-                        }
-                    />
-                    <FormRow
-                        label="Replugged"
-                        subLabel="Show Replugged Badges"
-                        trailing={
-                            <FormSwitch
-                                value={settings.getBoolean("showReplugged", true)}
-                                onValueChange={() => settings.toggle("showReplugged", true)}
-                            />
-                        }
-                    />
-                    <FormRow
-                        label="Velocity"
-                        subLabel="Show Velocity Badges"
-                        trailing={
-                            <FormSwitch
-                                value={settings.getBoolean("showVelocity", true)}
-                                onValueChange={() => settings.toggle("showVelocity", true)}
-                            />
-                        }
-                    />
-                    <FormRow
-                        label="Vencord"
-                        subLabel="Show Vencord Badges"
-                        trailing={
-                            <FormSwitch
-                                value={settings.getBoolean("showVencord", true)}
-                                onValueChange={() => settings.toggle("showVencord", true)}
+                                value={settings.getBoolean("showCustom", true)}
+                                onValueChange={() => settings.toggle("showCustom", true)}
                             />
                         }
                     />
