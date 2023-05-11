@@ -7,22 +7,23 @@ import { create } from "enmity/patcher";
 import Settings from "./components/Settings";
 import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
 import manifest from "../manifest.json";
-import { BadgeCache, CustomBadges } from "./types";
+import { BadgeCache, CustomBadge } from "./types";
 
 const API_URL = "https://clientmodbadges-api.herokuapp.com/";
 
 const cache = new Map<string, BadgeCache>();
 const EXPIRES = 1000 * 60 * 15;
 
-const fetchBadges = (id: string, setBadges: Function) => {
-    if (!cache.has(id) || cache.get(id)?.expires < Date.now()) {
+const fetchBadges = (id: string): BadgeCache["badges"] | undefined => {
+    const cachedValue = cache.get(id);
+    if (!cache.has(id) || (cachedValue && cachedValue.expires < Date.now())) {
         fetch(`${API_URL}users/${id}`)
-            .then((res) => res.json() as Promise<CustomBadges>)
-            .then((body) => {
+            .then(res => res.json() as Promise<BadgeCache["badges"]>)
+            .then(body => {
                 cache.set(id, { badges: body, expires: Date.now() + EXPIRES });
-                setBadges(body);
+                return body;
             });
-    } else setBadges(cache.get(id)?.badges);
+    } else if (cachedValue) return cachedValue.badges;
 };
 
 const Badge = ({ name, img }: { name: string, img: string }) => {
@@ -64,19 +65,22 @@ const GlobalBadges: Plugin = {
         const ProfileBadges = getByName("ProfileBadges", { all: true, default: false });
         for (const profileBadge of ProfileBadges) {
             Patcher.after(profileBadge, "default", (_, [{ user: { id } }], res) => {
-                const [badges, setBadges] = React.useState({} as CustomBadges);
-                React.useEffect(() => fetchBadges(id, setBadges), []);
-                const globalBadges: any[] = []
+                const [badges, setBadges] = React.useState<BadgeCache["badges"]>({});
+                React.useEffect(() => setBadges(fetchBadges(id) ?? {}), []);
+                
+                if (!badges) return null;
+                const globalBadges: any[] = [];
+                
                 if (!badges) return res;
-                Object.keys(badges).forEach((mod) => {
+                Object.keys(badges).forEach(mod => {
                     if (mod.toLowerCase() === "enmity") return;
-                    badges[mod].forEach(badge => {
+                    badges[mod].forEach((badge: CustomBadge) => {
                         if (typeof badge === "string") {
                             const fullNames = { "hunter": "Bug Hunter", "early": "Early User" };
                             if (fullNames[badge]) badge = fullNames[badge];
                             badge = {
-                                name: badge,
-                                badge: `${API_URL}badges/${mod}/${badge.replace(mod, "").trim().split(" ")[0]}`
+                                name: badge as string,
+                                badge: `${API_URL}badges/${mod}/${(badge as string).replace(mod, "").trim().split(" ")[0]}`
                             };
                         } else if (typeof badge === "object") badge.custom = true;
                         if (!get(manifest.name, "showCustom", true) && badge.custom) return;

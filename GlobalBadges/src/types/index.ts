@@ -1,8 +1,10 @@
-export interface CustomBadges {
-    [key: string]: string[];
-}
+export type CustomBadge = string | {
+    name: string;
+    badge: string;
+    custom?: boolean;
+};
 
 export interface BadgeCache {
-    badges: CustomBadges;
+    badges: { [mod: string]: CustomBadge[]; };
     expires: number;
 }
