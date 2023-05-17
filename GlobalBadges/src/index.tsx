@@ -1,13 +1,13 @@
-import { get, set } from "enmity/api/settings";
-import { Image, TouchableOpacity, View } from "enmity/components";
-import { Plugin, registerPlugin } from "enmity/managers/plugins";
-import { getByName } from "enmity/metro";
 import { React, Toasts } from "enmity/metro/common";
 import { create } from "enmity/patcher";
-import Settings from "./components/Settings";
-import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
-import manifest from "../manifest.json";
+import { get } from "enmity/api/settings";
+import { getByName } from "enmity/metro";
+import { Image, TouchableOpacity, View } from "enmity/components";
+import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { BadgeCache, CustomBadge } from "./types";
+import PluginUpdater from "@common/pluginUpdater.ts";
+import Settings from "./components/Settings";
+import manifest from "@GlobalBadges/manifest.json";
 
 const API_URL = "https://clientmodbadges-api.herokuapp.com/";
 
@@ -52,34 +52,23 @@ const Patcher = create(manifest.name);
 const GlobalBadges: Plugin = {
     ...manifest,
     onStart() {
-        if (!get(manifest.name, "_didUpdate", false)) {
-            if (get(manifest.name, "autoUpdateCheck", true)) {
-                hasUpdate().then((b) => {
-                    if (b) showUpdateDialog();
-                });
-            }
-            if (get(manifest.name, "_changelog", manifest.version) !== manifest.version) showChangelog();
-        }
-        set(manifest.name, "_didUpdate", false);
-
         const ProfileBadges = getByName("ProfileBadges", { all: true, default: false });
         for (const profileBadge of ProfileBadges) {
             Patcher.after(profileBadge, "default", (_, [{ user: { id } }], res) => {
                 const [badges, setBadges] = React.useState<BadgeCache["badges"]>({});
                 React.useEffect(() => setBadges(fetchBadges(id) ?? {}), []);
-                
+
                 if (!badges) return null;
                 const globalBadges: any[] = [];
-                
+
                 if (!badges) return res;
                 Object.keys(badges).forEach(mod => {
                     if (mod.toLowerCase() === "enmity") return;
                     badges[mod].forEach((badge: CustomBadge) => {
                         if (typeof badge === "string") {
                             const fullNames = { "hunter": "Bug Hunter", "early": "Early User" };
-                            if (fullNames[badge]) badge = fullNames[badge];
                             badge = {
-                                name: badge as string,
+                                name: fullNames[badge as string] ? fullNames[badge as string] : badge,
                                 badge: `${API_URL}badges/${mod}/${(badge as string).replace(mod, "").trim().split(" ")[0]}`
                             };
                         } else if (typeof badge === "object") badge.custom = true;

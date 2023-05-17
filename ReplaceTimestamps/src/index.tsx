@@ -1,25 +1,14 @@
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
-import { create } from "enmity/patcher";
 import { Messages, React } from "enmity/metro/common";
-import { get, set } from "enmity/api/settings";
+import { create } from "enmity/patcher";
+
+import manifest from "@ReplaceTimestamps/manifest.json";
 import Settings from "./components/Settings";
-import { hasUpdate, showUpdateDialog, showChangelog } from "./pluginUpdater";
-import manifest from "../manifest.json";
 
 const Patcher = create(manifest.name);
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
-        if (!get(manifest.name, "_didUpdate", false)) {
-            if (get(manifest.name, "autoUpdateCheck", true)) {
-                hasUpdate().then((b) => {
-                    if (b) showUpdateDialog();
-                });
-            }
-            if (get(manifest.name, "_changelog", manifest.version) !== manifest.version) showChangelog();
-        }
-        set(manifest.name, "_didUpdate", false);
-
         const getUnixTimestamp = (time) => {
             const date = new Date()
                 .toISOString()

@@ -21,13 +21,18 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v2
               with:
-                  node-version: 16.x
+                  node-version: 18.x
 
             - name: Install the Dependencies
               run: npm install
 
+            - name: Detect changed files
+              id: files
+              uses: jitterbit/get-changed-files@v1
+              continue-on-error: true
+
             - name: Build
-              run: npm run build
+              run: npm run build ${{ steps.files.outputs.all }}
 
             - name: Stage build
               uses: actions/upload-artifact@v2

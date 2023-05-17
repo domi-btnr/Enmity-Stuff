@@ -5,18 +5,19 @@
  */
 
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
-import { Constants, Dialog, Navigation, React, StyleSheet } from "enmity/metro/common";
-import { authors, changelog, name, sourceUrl, version } from "../../manifest.json";
+import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
+import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@GlobalBadges/manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { getByProps } from "enmity/metro";
-import { hasUpdate, showChangelog, showUpdateDialog } from "../pluginUpdater";
+import pluginUpdater from "@common/pluginUpdater.ts";
 
 interface SettingsProps {
     settings: SettingsStore;
 }
 
-const Router = getByProps("transitionToGuild");
+const Router = getByProps("transitionToGuild", "openURL");
 
+pluginUpdater.create(manifest);
 export default ({ settings }: SettingsProps) => {
     const styles = StyleSheet.createThemedStyleSheet({
         item: { color: Constants.ThemeColorMap.TEXT_MUTED },
@@ -89,6 +90,18 @@ export default ({ settings }: SettingsProps) => {
                                 {` ${version}`}
                             </Text>
                         </View>
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.main_text, styles.sub_header]}>Hash:</Text>
+                            <Text
+                                style={[
+                                    styles.main_text,
+                                    styles.sub_header,
+                                    { paddingLeft: 4, fontFamily: Constants.Fonts.DISPLAY_BOLD },
+                                ]}
+                            >
+                                {` ${hash.slice(0, 7)}`}
+                            </Text>
+                        </View>
                     </View>
                 </View>
                 <FormSection title="Badges">
@@ -127,23 +140,13 @@ export default ({ settings }: SettingsProps) => {
                     <FormRow
                         label="Check for Updates"
                         trailing={FormRow.Arrow}
-                        onPress={() => {
-                            hasUpdate().then((b) => {
-                                if (b) showUpdateDialog();
-                                else
-                                    Dialog.show({
-                                        title: "Plugin Updater",
-                                        body: `**${name}** is already on the latest version (**${version}**)`,
-                                        confirmText: "OK",
-                                    });
-                            });
-                        }}
+                        onPress={() => pluginUpdater.checkForUpdates(true)}
                     />
                     <FormRow
                         label="Show Changelog"
                         subLabel={`Shows the changelog for v${version}`}
                         trailing={FormRow.Arrow}
-                        onPress={() => showChangelog()}
+                        onPress={() => pluginUpdater.showChangelog()}
                         disabled={!changelog.length}
                     />
                 </FormSection>

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "allowImportingTsExtensions": true,
+        "esModuleInterop": true,
+        "jsx": "react-native",
+        "resolveJsonModule": true,
+        "noEmit": true,
+        "paths": {
+            "@common/*": ["common/*"],
+            "@GlobalBadges/*": ["GlobalBadges/*"],
+            "@ReplaceTimestamps/*": ["ReplaceTimestamps/*"]
+        }
+    }
+}

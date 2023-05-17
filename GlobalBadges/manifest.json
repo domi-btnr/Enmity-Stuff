@@ -1,6 +1,6 @@
 {
     "name": "GlobalBadges",
-    "version": "1.1.5",
+    "version": "1.2.5",
     "description": "Adds global badges from other client mods",
     "authors": [
         {
@@ -11,5 +11,9 @@
     "color": "#E54B4B",
     "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/GlobalBadges.js",
     "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/GlobalBadges",
-    "changelog": ["Added support for Custom Badges"]
+    "changelog": [
+        "Improved Updater",
+        "Fixed Replugged Bug Hunter Badge"
+    ],
+    "hash": "38e0375bf9a2a93958bd86afa53e4160233d32a9"
 }
