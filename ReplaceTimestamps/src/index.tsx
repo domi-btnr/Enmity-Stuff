@@ -29,7 +29,7 @@ const ReplaceTimestamps: Plugin = {
                     [, hours, minutes, mode] = REGEX.exec(x).map((g, i) => {
                         if (g === undefined) return g;
                         if (i === 1 || i === 2) return parseInt(g);
-                        if (i === 3) return g.toUpperCase();
+                        if (i === 3) return g.trim().toUpperCase();
                     });
                     let time = `${hours}:${minutes}`;
                     if (mode === "PM" && hours < 12 && hours !== 0) {
