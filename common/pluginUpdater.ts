@@ -69,7 +69,6 @@ const PluginUpdater = {
             const remoteVersionParts = this.remoteVersion.split(".").map(Number);
 
             for (let i = 0; i < currentVersionParts.length; i++) {
-                console.log(`[${this.name}] Checking version: ${remoteVersionParts[i]} > ${currentVersionParts[i]} ${remoteVersionParts[i] > currentVersionParts[i]}`);
                 if (remoteVersionParts[i] > currentVersionParts[i])
                     return this.showUpdateDialog({ version: this.remoteVersion, changelog: this.remoteChangelog });
                 else if (remoteVersionParts[i] < currentVersionParts[i]) return console.log(`[${this.name}] Remote version is older than local version`);
@@ -87,7 +86,6 @@ const PluginUpdater = {
     },
 
     showUpdateDialog({ version, hash, changelog }: { version?: string, hash?: string, changelog?: string[] }) {
-        console.log(`[${this.name}] Showing update dialog`);
         if (!version && !hash) return console.error(`[${this.name}] Missing parameters in showUpdateDialog()`);
 
         let updateMSG = "";

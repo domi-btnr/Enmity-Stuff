@@ -1,6 +1,6 @@
 {
     "name": "ReplaceTimestamps",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "description": "Replaces plaintext 24 hour timestamps into Discord's timestamps",
     "authors": [
         {
@@ -12,7 +12,7 @@
     "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/ReplaceTimestamps.js",
     "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/ReplaceTimestamps",
     "changelog": [
-        "Improved Pluginupdater"
+        "Fixed timestamps not being replaced in some cases"
     ],
-    "hash": ""
+    "hash": "DEBUG"
 }

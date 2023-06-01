@@ -21,23 +21,23 @@ const ReplaceTimestamps: Plugin = {
         };
 
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
-            let REGEX =
-                /(?:^| )(?:([01][0-9]|2?[0-4]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Thank you King Fish */
+            const REGEX = /\b(0?[0-9]|1[0-9]|2[0-4]):([0-5][0-9])( ?[ap]m)?\b/gi
             if (msg.content.search(REGEX) !== -1)
-                msg.content = msg.content.replace(REGEX, (x) => {
-                    REGEX =
-                        /(?:^| )(?:([01][0-9]|2?[0-4]):([0-5][0-9])(?: ?([ap]m?))?|([0-2]?[1-9])(?: ?([ap]m?)))(?:$| )/gim; /* Reset REGEX */
+                msg.content = msg.content.replace(REGEX, (x: string) => {
+                    let hours: number, minutes: string, mode: null | "AM" | "PM";
                     // @ts-ignore
-                    let [, hours, minutes, mode, hours2, mode2] = REGEX.exec(x);
-                    [hours, minutes] = [hours ? hours : hours2, minutes ? minutes : "00"].map((i) => parseInt(i));
+                    [, hours, minutes, mode] = REGEX.exec(x).map((g, i) => {
+                        if (i === 1 || i === 2) return parseInt(g);
+                        if (i === 3) return g.toUpperCase();
+                    });
                     let time = `${hours}:${minutes}`;
-                    mode = mode ? mode : mode2;
-                    if (mode && mode.toLowerCase() === "pm" && hours < 12 && hours !== 0) {
+                    if (mode === "PM" && hours < 12 && hours !== 0) {
                         hours += 12;
                         minutes = minutes.toString().padStart(2, "0");
                         time = `${hours}:${minutes}`;
-                    } else if ((mode && mode.toLowerCase() === "am" && hours === 12) || hours === 24)
+                    } else if ((mode === "AM" && hours === 12) || hours === 24) {
                         time = `00:${minutes}`;
+                    }
                     return getUnixTimestamp(time);
                 });
         });
