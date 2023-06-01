@@ -30,7 +30,7 @@ const PluginUpdater = {
 
         if (!get(name, "_didUpdate", false)) {
             if (get(name, "_changelog", version) !== version) this.showChangelog();
-            if (get(name, "autoUpdateCheck", true)) this.checkForUpdates();
+            if (get(name, "autoUpdateCheck", true) && this.hash !== "DEBUG") this.checkForUpdates();
         }
         set(name, "_didUpdate", false);
     },
