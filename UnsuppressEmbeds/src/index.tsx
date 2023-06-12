@@ -18,7 +18,7 @@ const [
     Icon,
     LazyActionSheet,
     PermissionStore,
-    UserStore,
+    UserStore
  ] = bulk(
     filters.byName("ActionSheet", false),
     filters.byProps("getChannel"),
@@ -26,7 +26,7 @@ const [
     filters.byName("Icon"),
     filters.byProps("openLazy", "hideActionSheet"),
     filters.byProps("getChannelPermissions"),
-    filters.byProps("getCurrentUser", "getUser"),
+    filters.byProps("getCurrentUser", "getUser")
  );
 
 const Patcher = create(manifest.name);
@@ -49,9 +49,11 @@ const UnsuppressEmbeds: Plugin = {
                 if (!canManageMessages && !isOwnDM) return;
 
                 const finalLocation = findInReactTree(res, r => 
-                    Array.isArray(r)
-                    && r.find(o => typeof o?.key === "string"
-                    && typeof o?.props?.message === "string")
+                    Array.isArray(r) &&
+                    r.find(o => 
+                        typeof o?.key === "string" &&
+                        typeof o?.props?.message === "string"
+                    )
                 );
                 const buttonPosition = finalLocation?.findIndex(i =>
                     i.props?.message === i18n.Messages.DELETE_MESSAGE
