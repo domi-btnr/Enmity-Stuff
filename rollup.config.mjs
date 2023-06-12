@@ -6,9 +6,9 @@ import json from "@rollup/plugin-json";
 import esbuild from "rollup-plugin-esbuild";
 import path from "path";
 
-export const plugins = ["GlobalBadges", "ReplaceTimestamps", "UnsuppressEmbeds"];
+export const plugins = [];
 export default () => {
-    const pluginConfigs = plugins.map((pluginName) => {
+    const pluginConfigs = plugins.map(pluginName => {
         return defineConfig({
             input: `${pluginName}/src/index.tsx`,
             output: [
@@ -21,10 +21,7 @@ export default () => {
             plugins: [
                 alias({
                     entries: [
-                        { find: "@common", replacement: path.resolve(__dirname, "common") },
-                        { find: "@GlobalBadges", replacement: path.resolve(__dirname, "GlobalBadges") },
-                        { find: "@ReplaceTimestamps", replacement: path.resolve(__dirname, "ReplaceTimestamps") },
-                        { find: "@UnsuppressEmbeds", replacement: path.resolve(__dirname, "UnsuppressEmbeds")}
+                        { find: "@common", replacement: path.resolve(__dirname, "common") }
                     ]
                 }),
                 nodeResolve(),

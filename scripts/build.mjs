@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
-const plugins = Array.from(new Set(args.map(arg => {
+let plugins = Array.from(new Set(args.map(arg => {
     const rootDir = arg.split("/")[0];
     return validPlugins.find(plugin => plugin === rootDir);
 }))).filter(p => p);
@@ -44,8 +44,40 @@ const updateManifests = async () => {
     }
 };
 
+const updateRollupConfig = async () => {
+    plugins = plugins.length ? plugins : ["GlobalBadges", "ReplaceTimestamps", "UnsuppressEmbeds"];
+    const rollupConfigPath = join(__dirname, "..", "rollup.config.mjs");
+    try {
+        const rollupConfigContent = await readFile(rollupConfigPath, "utf8");
+
+        const updatedRollupConfigContent = rollupConfigContent.replace(
+            /export const plugins = \[.*\]/g,
+            `export const plugins = ${JSON.stringify(plugins)}`
+        );
+
+        const updatedAliasConfigContent = updatedRollupConfigContent.replace(
+            /alias\({([\s\S]*?)\}\)/g,
+            `alias({
+          entries: [
+            { find: "@common", replacement: path.resolve(__dirname, "common") },
+            ${plugins.map(plugin => `{ find: "@${plugin}", replacement: path.resolve(__dirname, "${plugin}") }`).join(",\n")}
+          ]
+        })`
+        );
+
+        await writeFile(rollupConfigPath, updatedAliasConfigContent);
+    } catch (error) {
+        console.error("Error updating rollup.config.mjs:", error);
+    }
+};
+
 const run = async () => {
-    await updateManifests();
+    if (plugins.length) {
+        console.log(`Building ${plugins.join(", ")}`);
+        await updateManifests();
+    }
+    await updateRollupConfig();
+    await new Promise(resolve => setTimeout(resolve, 3000));
     execSync("npx rollup -c --configPlugin esbuild", { stdio: "inherit" });
 };
 
