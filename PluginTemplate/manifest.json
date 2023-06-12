@@ -9,5 +9,8 @@
         }
     ],
     "color": "#E54B4B",
-    "sourceUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/PluginTemplate.js"
+    "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/PluginTemplate.js",
+    "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/PluginTemplate",
+    "changelog": [],
+    "hash": "DEBUG"
 }

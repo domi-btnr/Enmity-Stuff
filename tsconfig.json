@@ -9,7 +9,8 @@
         "paths": {
             "@common/*": ["common/*"],
             "@GlobalBadges/*": ["GlobalBadges/*"],
-            "@ReplaceTimestamps/*": ["ReplaceTimestamps/*"]
+            "@ReplaceTimestamps/*": ["ReplaceTimestamps/*"],
+            "@UnsuppressEmbeds/*": ["UnsuppressEmbeds/*"],
         }
     }
 }
