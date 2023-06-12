@@ -1,13 +1,13 @@
+import { Image, TouchableOpacity, View } from "enmity/components";
+import { Plugin, registerPlugin } from "enmity/managers/plugins";
+import { getByName } from "enmity/metro";
 import { React, Toasts } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 import { get } from "enmity/api/settings";
-import { getByName } from "enmity/metro";
-import { Image, TouchableOpacity, View } from "enmity/components";
-import { Plugin, registerPlugin } from "enmity/managers/plugins";
-import { BadgeCache, CustomBadge } from "./types";
-import PluginUpdater from "@common/pluginUpdater.ts";
-import Settings from "./components/Settings";
+
 import manifest from "@GlobalBadges/manifest.json";
+import Settings from "./components/Settings";
+import { BadgeCache, CustomBadge } from "./types";
 
 const API_URL = "https://clientmodbadges-api.herokuapp.com/";
 
