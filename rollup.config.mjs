@@ -6,7 +6,7 @@ import json from "@rollup/plugin-json";
 import esbuild from "rollup-plugin-esbuild";
 import path from "path";
 
-export const plugins = [];
+const plugins = [];
 export default () => {
     const pluginConfigs = plugins.map(pluginName => {
         return defineConfig({

@@ -1,10 +1,10 @@
-import { plugins as validPlugins } from "../rollup.config.mjs";
 import { execSync } from "child_process";
 import { readFile, writeFile } from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const validPlugins = ["GlobalBadges", "ReplaceTimestamps", "UnsuppressEmbeds"];
 
 const args = process.argv.slice(2);
 let plugins = Array.from(new Set(args.map(arg => {
@@ -45,14 +45,14 @@ const updateManifests = async () => {
 };
 
 const updateRollupConfig = async () => {
-    plugins = plugins.length ? plugins : ["GlobalBadges", "ReplaceTimestamps", "UnsuppressEmbeds"];
+    plugins = plugins.length ? plugins : validPlugins;
     const rollupConfigPath = join(__dirname, "..", "rollup.config.mjs");
     try {
         const rollupConfigContent = await readFile(rollupConfigPath, "utf8");
 
         const updatedRollupConfigContent = rollupConfigContent.replace(
-            /export const plugins = \[.*\]/g,
-            `export const plugins = ${JSON.stringify(plugins)}`
+            /const plugins = \[.*\]/g,
+            `const plugins = ${JSON.stringify(plugins)}`
         );
 
         const updatedAliasConfigContent = updatedRollupConfigContent.replace(
