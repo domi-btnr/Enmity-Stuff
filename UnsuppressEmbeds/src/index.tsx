@@ -44,7 +44,7 @@ const UnsuppressEmbeds: Plugin = {
             Patcher.after(FinalLocation?.content, "type", (_, [{ message }], res) => {
                 const channel = ChannelStore.getChannel(message.channel_id);
                 const isEmbedSuppressed = (message.flags & EMBED_SUPPRESSED) !== 0;
-                const canManageMessages = !!(PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.MANAGE_MESSAGES);
+                const canManageMessages = (PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.MANAGE_MESSAGES) !== 0;
                 const isOwnDM = message.author.id === UserStore.getCurrentUser().id && (channel.isDM() || channel.isGroupDM());
                 if (!canManageMessages && !isOwnDM) return;
 
