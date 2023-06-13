@@ -71,7 +71,7 @@ const updateRollupConfig = async () => {
     }
 };
 
-(() async => {
+(async () => {
     /*
      * When run with Workflow it'll have args
      * But when no plugin got changed, then dont build 
