@@ -71,14 +71,18 @@ const updateRollupConfig = async () => {
     }
 };
 
-const run = async () => {
-    if (plugins.length) {
-        console.log(`Building ${plugins.join(", ")}`);
-        await updateManifests();
-    }
+(() async => {
+    /*
+     * When run with Workflow it'll have args
+     * But when no plugin got changed, then dont build 
+     */
+    if (args.length && !plugins.length) return;
+
+    // Update Hash of modified Plugins
+    if (plugins.length) await updateManifests();
+    
     await updateRollupConfig();
+    console.log(`Building ${plugins.join(", ")}`);
     await new Promise(resolve => setTimeout(resolve, 3000));
     execSync("npx rollup -c --configPlugin esbuild", { stdio: "inherit" });
-};
-
-run();
+})();
