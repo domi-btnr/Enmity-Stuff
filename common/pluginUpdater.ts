@@ -111,6 +111,7 @@ const PluginUpdater = {
         const versionText = hash ? `\`${this.remoteHash?.slice(0, 7)}\`` : this.remoteVersion;
 
         // @ts-ignore
+        // eslint-disable-next-line no-undef
         window.enmity.plugins.installPlugin(`${this.rawUrl}?${Math.random()}`, ({ data }) => {
             if (data === "installed_plugin" || data === "overridden_plugin") {
                 Dialog.show({

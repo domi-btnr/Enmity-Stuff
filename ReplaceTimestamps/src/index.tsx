@@ -1,15 +1,15 @@
+import manifest from "@ReplaceTimestamps/manifest.json";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { Messages, React } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 
-import manifest from "@ReplaceTimestamps/manifest.json";
 import Settings from "./components/Settings";
 
 const Patcher = create(manifest.name);
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
-        const getUnixTimestamp = (time) => {
+        const getUnixTimestamp = time => {
             const date = new Date()
                 .toISOString()
                 .replace(/T/, " ")
@@ -26,6 +26,7 @@ const ReplaceTimestamps: Plugin = {
                 msg.content = msg.content.replace(REGEX, (x: string) => {
                     let hours: number, minutes: string, mode: null | "AM" | "PM";
                     // @ts-ignore
+                    // eslint-disable-next-line prefer-const
                     [, hours, minutes, mode] = REGEX.exec(x).map((g, i) => {
                         if (g === undefined) return g;
                         if (i === 1 || i === 2) return parseInt(g);

@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { readFile, writeFile } from "fs/promises";
-import { dirname, join } from "path";
+import { basename, dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -44,45 +44,44 @@ const updateManifests = async () => {
     }
 };
 
-const updateRollupConfig = async () => {
+const updateRollupConfig = async rollupConfigPath => {
     plugins = plugins.length ? plugins : validPlugins;
-    const rollupConfigPath = join(__dirname, "..", "rollup.config.mjs");
     try {
         const rollupConfigContent = await readFile(rollupConfigPath, "utf8");
 
         const updatedRollupConfigContent = rollupConfigContent.replace(
             /const plugins = \[.*\]/g,
             `const plugins = ${JSON.stringify(plugins)}`
-        );
-
-        const updatedAliasConfigContent = updatedRollupConfigContent.replace(
+        ).replace(
             /alias\({([\s\S]*?)\}\)/g,
             `alias({
           entries: [
             { find: "@common", replacement: path.resolve(__dirname, "common") },
             ${plugins.map(plugin => `{ find: "@${plugin}", replacement: path.resolve(__dirname, "${plugin}") }`).join(",\n")}
           ]
-        })`
-        );
-
-        await writeFile(rollupConfigPath, updatedAliasConfigContent);
+        })`);
+        await writeFile(rollupConfigPath, updatedRollupConfigContent);
+        return rollupConfigContent;
     } catch (error) {
-        console.error("Error updating rollup.config.mjs:", error);
+        console.error(`Error updating ${basename(rollupConfigPath)}:`, error);
     }
 };
 
 (async () => {
     /*
      * When run with Workflow it'll have args
-     * But when no plugin got changed, then dont build 
+     * But when no plugin got changed, then dont build
      */
-    if (args.length && !plugins.length) return;
+    const devBuild = !args.length;
+    if (!devBuild && !plugins.length) return console.log("No plugins to build");
 
     // Update Hash of modified Plugins
     if (plugins.length) await updateManifests();
-    
-    await updateRollupConfig();
+
+    const rollupConfigPath = join(__dirname, "..", "rollup.config.js");
+    const oldConfig = await updateRollupConfig(rollupConfigPath);
     console.log(`Building ${plugins.join(", ")}`);
     await new Promise(resolve => setTimeout(resolve, 3000));
     execSync("npx rollup -c --configPlugin esbuild", { stdio: "inherit" });
+    if (devBuild) await writeFile(rollupConfigPath, oldConfig);
 })();

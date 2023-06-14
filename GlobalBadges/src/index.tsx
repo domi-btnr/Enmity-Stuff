@@ -1,11 +1,11 @@
+import manifest from "@GlobalBadges/manifest.json";
+import { get } from "enmity/api/settings";
 import { Image, TouchableOpacity, View } from "enmity/components";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { getByName } from "enmity/metro";
 import { React, Toasts } from "enmity/metro/common";
 import { create } from "enmity/patcher";
-import { get } from "enmity/api/settings";
 
-import manifest from "@GlobalBadges/manifest.json";
 import Settings from "./components/Settings";
 import { BadgeCache, CustomBadge } from "./types";
 

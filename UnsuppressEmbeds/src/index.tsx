@@ -1,12 +1,12 @@
+import manifest from "@UnsuppressEmbeds/manifest.json";
 import { getIDByName } from "enmity/api/assets";
 import { FormRow } from "enmity/components";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { bulk, filters } from "enmity/metro";
-import { Constants, REST, React } from "enmity/metro/common";
+import { Constants, React, REST } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 import { findInReactTree } from "enmity/utilities";
 
-import manifest from "../manifest.json";
 import Settings from "./components/Settings";
 
 const EMBED_SUPPRESSED = 1 << 2;
@@ -19,7 +19,7 @@ const [
     LazyActionSheet,
     PermissionStore,
     UserStore
- ] = bulk(
+] = bulk(
     filters.byName("ActionSheet", false),
     filters.byProps("getChannel"),
     filters.byProps("Messages"),
@@ -27,18 +27,18 @@ const [
     filters.byProps("openLazy", "hideActionSheet"),
     filters.byProps("getChannelPermissions"),
     filters.byProps("getCurrentUser", "getUser")
- );
+);
 
 const Patcher = create(manifest.name);
 const UnsuppressEmbeds: Plugin = {
     ...manifest,
     onStart() {
-        /* 
+        /*
          * Code from https://github.com/acquitelol/dislate/blob/main/src/index.tsx
          * Thanks rosie <3
          */
         Patcher.after(ActionSheet, "default", (_, __, res) => {
-            const FinalLocation = findInReactTree(res, r => r.sheetKey)
+            const FinalLocation = findInReactTree(res, r => r.sheetKey);
             if (FinalLocation?.sheetKey && FinalLocation.sheetKey !== "MessageLongPressActionSheet") return;
 
             Patcher.after(FinalLocation?.content, "type", (_, [{ message }], res) => {
@@ -48,9 +48,9 @@ const UnsuppressEmbeds: Plugin = {
                 const isOwnDM = message.author.id === UserStore.getCurrentUser().id && (channel.isDM() || channel.isGroupDM());
                 if (!canManageMessages && !isOwnDM) return;
 
-                const finalLocation = findInReactTree(res, r => 
+                const finalLocation = findInReactTree(res, r =>
                     Array.isArray(r) &&
-                    r.find(o => 
+                    r.find(o =>
                         typeof o?.key === "string" &&
                         typeof o?.props?.message === "string"
                     )
@@ -63,8 +63,8 @@ const UnsuppressEmbeds: Plugin = {
                     <FormRow
                         key={manifest.name}
                         label={isEmbedSuppressed ? "Unsuppress Embeds" : "Suppress Embeds"}
-                        leading={<Icon 
-                            source={isEmbedSuppressed ? 
+                        leading={<Icon
+                            source={isEmbedSuppressed ?
                                 getIDByName("ic_message_retry") :
                                 getIDByName("ic_close_16px")
                             }
@@ -78,8 +78,8 @@ const UnsuppressEmbeds: Plugin = {
                         }}
                     />
                 ));
-            }) 
-         })
+            });
+        });
     },
     onStop() {
         Patcher.unpatchAll();

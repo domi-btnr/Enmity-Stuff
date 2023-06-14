@@ -4,12 +4,12 @@
  *   and https://github.com/acquitelol/dislate/blob/main/src/components/Credits.tsx
  */
 
-import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
-import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
+import pluginUpdater from "@common/pluginUpdater.ts";
 import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@GlobalBadges/manifest.json";
 import { SettingsStore } from "enmity/api/settings";
+import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
 import { getByProps } from "enmity/metro";
-import pluginUpdater from "@common/pluginUpdater.ts";
+import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
 
 interface SettingsProps {
     settings: SettingsStore;
@@ -50,11 +50,11 @@ export default ({ settings }: SettingsProps) => {
     return (
         <>
             <ScrollView
-                onTouchStart={(e) => {
+                onTouchStart={e => {
                     setTouchX(e.nativeEvent.pageX);
                     setTouchY(e.nativeEvent.pageY);
                 }}
-                onTouchEnd={(e) => {
+                onTouchEnd={e => {
                     if (
                         touchX - e.nativeEvent.pageX < -100 &&
                         touchY - e.nativeEvent.pageY < 40 &&
@@ -75,7 +75,7 @@ export default ({ settings }: SettingsProps) => {
                                     { paddingLeft: 4, fontFamily: Constants.Fonts.DISPLAY_BOLD },
                                 ]}
                             >
-                                {` ${authors.map((a) => a.name).join(", ")}`}
+                                {` ${authors.map(a => a.name).join(", ")}`}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
