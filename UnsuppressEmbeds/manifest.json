@@ -1,6 +1,6 @@
 {
     "name": "UnsuppressEmbeds",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Allows you to Suppress/Unsuppress Embeds",
     "authors": [
         {
@@ -11,6 +11,6 @@
     "color": "#E54B4B",
     "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/UnsuppressEmbeds.js",
     "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/UnsuppressEmbeds",
-    "changelog": [],
+    "changelog": ["Improved Check"],
     "hash": "DEBUG"
 }

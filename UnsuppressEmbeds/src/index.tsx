@@ -44,9 +44,10 @@ const UnsuppressEmbeds: Plugin = {
             Patcher.after(FinalLocation?.content, "type", (_, [{ message }], res) => {
                 const channel = ChannelStore.getChannel(message.channel_id);
                 const isEmbedSuppressed = !!(message.flags & EMBED_SUPPRESSED);
-                const canManageMessages = !!(PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.MANAGE_MESSAGES);
-                const isOwnDM = message.author.id === UserStore.getCurrentUser().id && (channel.isDM() || channel.isGroupDM());
-                if (!canManageMessages && !isOwnDM) return;
+                const hasEmbedPerms = !!(PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.EMBED_LINKS);
+
+                if (!isEmbedSuppressed && !message.embeds.length) return;
+                if (message.author.id === UserStore.getCurrentUser().id && !hasEmbedPerms) return;
 
                 const finalLocation = findInReactTree(res, r =>
                     Array.isArray(r) &&
@@ -58,6 +59,8 @@ const UnsuppressEmbeds: Plugin = {
                 const buttonPosition = finalLocation?.findIndex(i =>
                     i.props?.message === i18n.Messages.DELETE_MESSAGE
                 );
+
+                if (buttonPosition === -1) return;
 
                 finalLocation.splice(buttonPosition, 0, (
                     <FormRow
