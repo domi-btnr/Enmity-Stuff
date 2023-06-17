@@ -4,7 +4,7 @@ import { basename, dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const validPlugins = ["GlobalBadges", "ReplaceTimestamps", "UnsuppressEmbeds"];
+const validPlugins = ["GlobalBadges", "ReplaceTimestamps", "SuppressEmbeds"];
 
 const args = process.argv.slice(2);
 let plugins = Array.from(new Set(args.map(arg => {
