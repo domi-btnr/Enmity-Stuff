@@ -10,7 +10,7 @@
             "@common/*": ["common/*"],
             "@GlobalBadges/*": ["GlobalBadges/*"],
             "@ReplaceTimestamps/*": ["ReplaceTimestamps/*"],
-            "@UnsuppressEmbeds/*": ["UnsuppressEmbeds/*"],
+            "@SuppressEmbeds/*": ["SuppressEmbeds/*"],
         }
     }
 }

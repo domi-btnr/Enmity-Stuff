@@ -1,4 +1,4 @@
-import manifest from "@UnsuppressEmbeds/manifest.json";
+import manifest from "@SuppressEmbeds/manifest.json";
 import { getIDByName } from "enmity/api/assets";
 import { FormRow } from "enmity/components";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
@@ -37,11 +37,13 @@ const UnsuppressEmbeds: Plugin = {
          * Code from https://github.com/acquitelol/dislate/blob/main/src/index.tsx
          * Thanks rosie <3
          */
+        let unpatch;
         Patcher.after(ActionSheet, "default", (_, __, res) => {
+            unpatch?.();
             const FinalLocation = findInReactTree(res, r => r.sheetKey);
             if (FinalLocation?.sheetKey && FinalLocation.sheetKey !== "MessageLongPressActionSheet") return;
 
-            Patcher.after(FinalLocation?.content, "type", (_, [{ message }], res) => {
+            unpatch = Patcher.after(FinalLocation?.content, "type", (_, [{ message }], res) => {
                 const channel = ChannelStore.getChannel(message.channel_id);
                 const isEmbedSuppressed = !!(message.flags & EMBED_SUPPRESSED);
                 const hasEmbedPerms = !!(PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.EMBED_LINKS);

@@ -5,7 +5,7 @@
  */
 
 import pluginUpdater from "@common/pluginUpdater.ts";
-import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@UnsuppressEmbeds/manifest.json";
+import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@SuppressEmbeds/manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
 import { getByProps } from "enmity/metro";
