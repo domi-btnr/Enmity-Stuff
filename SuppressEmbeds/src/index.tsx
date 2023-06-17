@@ -3,7 +3,7 @@ import { getIDByName } from "enmity/api/assets";
 import { FormRow } from "enmity/components";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { bulk, filters } from "enmity/metro";
-import { Constants, React, REST } from "enmity/metro/common";
+import { Constants, Locale, React, REST, Users } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 import { findInReactTree } from "enmity/utilities";
 
@@ -14,19 +14,15 @@ const EMBED_SUPPRESSED = 1 << 2;
 const [
     ActionSheet,
     ChannelStore,
-    i18n,
     Icon,
     LazyActionSheet,
-    PermissionStore,
-    UserStore
+    PermissionStore
 ] = bulk(
     filters.byName("ActionSheet", false),
     filters.byProps("getChannel"),
-    filters.byProps("Messages"),
     filters.byName("Icon"),
     filters.byProps("openLazy", "hideActionSheet"),
-    filters.byProps("getChannelPermissions"),
-    filters.byProps("getCurrentUser", "getUser")
+    filters.byProps("getChannelPermissions")
 );
 
 const Patcher = create(manifest.name);
@@ -49,7 +45,7 @@ const UnsuppressEmbeds: Plugin = {
                 const hasEmbedPerms = !!(PermissionStore.getChannelPermissions({ id: message.channel_id }) & Constants.Permissions.EMBED_LINKS);
 
                 if (!isEmbedSuppressed && !message.embeds.length) return;
-                if (message.author.id === UserStore.getCurrentUser().id && !hasEmbedPerms) return;
+                if (message.author.id === Users.getCurrentUser().id && !hasEmbedPerms) return;
 
                 const finalLocation = findInReactTree(res, r =>
                     Array.isArray(r) &&
@@ -59,7 +55,7 @@ const UnsuppressEmbeds: Plugin = {
                     )
                 );
                 const buttonPosition = finalLocation?.findIndex(i =>
-                    i.props?.message === i18n.Messages.DELETE_MESSAGE
+                    i.props?.message === Locale.Messages.DELETE_MESSAGE
                 );
 
                 if (buttonPosition === -1) return;
