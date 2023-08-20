@@ -14,13 +14,11 @@ const EMBED_SUPPRESSED = 1 << 2;
 const [
     ActionSheet,
     ChannelStore,
-    Icon,
     LazyActionSheet,
     PermissionStore
 ] = bulk(
     filters.byName("ActionSheet", false),
     filters.byProps("getChannel"),
-    filters.byName("Icon"),
     filters.byProps("openLazy", "hideActionSheet"),
     filters.byProps("getChannelPermissions")
 );
@@ -64,7 +62,7 @@ const UnsuppressEmbeds: Plugin = {
                     <FormRow
                         key={manifest.name}
                         label={isEmbedSuppressed ? "Unsuppress Embeds" : "Suppress Embeds"}
-                        leading={<Icon
+                        leading={<FormRow.Icon
                             source={isEmbedSuppressed ?
                                 getIDByName("ic_message_retry") :
                                 getIDByName("ic_close_16px")
