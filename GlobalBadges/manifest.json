@@ -1,6 +1,6 @@
 {
     "name": "GlobalBadges",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "description": "Adds global badges from other client mods",
     "authors": [
         {
@@ -12,8 +12,7 @@
     "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/GlobalBadges.js",
     "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/GlobalBadges",
     "changelog": [
-        "Improved Updater",
-        "Fixed Replugged Bug Hunter Badge"
+        "Fixed Badges not appearing on Profiles"
     ],
     "hash": "DEBUG"
 }

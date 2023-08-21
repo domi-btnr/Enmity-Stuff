@@ -52,39 +52,53 @@ const Patcher = create(manifest.name);
 const GlobalBadges: Plugin = {
     ...manifest,
     onStart() {
-        const ProfileBadges = getByName("ProfileBadges", { all: true, default: false });
-        for (const profileBadge of ProfileBadges) {
-            Patcher.after(profileBadge, "default", (_, [{ user: { id } }], res) => {
-                const [badges, setBadges] = React.useState<BadgeCache["badges"]>({});
-                React.useEffect(() => setBadges(fetchBadges(id) ?? {}), []);
+        const ProfileBadges = getByName("ProfileBadges", { default: false });
+        Patcher.after(ProfileBadges, "default", (_, [{ user: { id }, style }], res) => {
+            const oldRes = res;
+            if (!res) {
+                res = <View
+                    style={[style, {
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        alignItems: "flex-end",
+                        justifyContent: "flex-end",
+                        paddingVertical: 2
+                    }]}
+                    accessibilityRole="list"
+                    accessibilityLabel="User Badges"
+                />;
+                res.props.children = [];
+            }
 
-                if (!badges) return null;
-                const globalBadges: any[] = [];
+            const [badges, setBadges] = React.useState<BadgeCache["badges"]>({});
+            React.useEffect(() => setBadges(fetchBadges(id) ?? {}), []);
 
-                if (!badges) return res;
-                Object.keys(badges).forEach(mod => {
-                    if (mod.toLowerCase() === "enmity") return;
-                    badges[mod].forEach((badge: CustomBadge) => {
-                        if (typeof badge === "string") {
-                            const fullNames = { "hunter": "Bug Hunter", "early": "Early User" };
-                            badge = {
-                                name: fullNames[badge as string] ? fullNames[badge as string] : badge,
-                                badge: `${API_URL}badges/${mod}/${(badge as string).replace(mod, "").trim().split(" ")[0]}`
-                            };
-                        } else if (typeof badge === "object") badge.custom = true;
-                        if (!get(manifest.name, "showCustom", true) && badge.custom) return;
-                        const cleanName = badge.name.replace(mod, "").trim();
-                        const prefix = get(manifest.name, "showPrefix", true) ? mod : "";
-                        if (!badge.custom) badge.name = `${prefix} ${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)}`;
-                        globalBadges.push(<Badge name={badge.name} img={badge.badge} />);
-                    });
+            const globalBadges: any[] = [];
+            if (!badges) return res;
+            Object.keys(badges).forEach(mod => {
+                if (mod.toLowerCase() === "enmity") return;
+                badges[mod].forEach((badge: CustomBadge) => {
+                    if (typeof badge === "string") {
+                        const fullNames = { "hunter": "Bug Hunter", "early": "Early User" };
+                        badge = {
+                            name: fullNames[badge as string] ? fullNames[badge as string] : badge,
+                            badge: `${API_URL}badges/${mod}/${(badge as string).replace(mod, "").trim().split(" ")[0]}`
+                        };
+                    } else if (typeof badge === "object") badge.custom = true;
+                    if (!get(manifest.name, "showCustom", true) && badge.custom) return;
+                    const cleanName = badge.name.replace(mod, "").trim();
+                    const prefix = get(manifest.name, "showPrefix", true) ? mod : "";
+                    if (!badge.custom) badge.name = `${prefix} ${cleanName.charAt(0).toUpperCase() + cleanName.slice(1)}`;
+                    globalBadges.push(<Badge name={badge.name} img={badge.badge} />);
                 });
-
-                if (!globalBadges.length) return res;
-                if (res.props.badges) res.props.badges.push(...globalBadges);
-                else res.props.children.push(...globalBadges);
             });
-        }
+
+            if (!globalBadges.length) return res;
+            if (res.props.badges) res.props.badges.push(...globalBadges);
+            else res.props.children.push(...globalBadges);
+
+            if (!oldRes) return res;
+        });
     },
     onStop() { Patcher.unpatchAll(); },
     getSettingsPanel({ settings }) {
