@@ -9,8 +9,8 @@
         }
     ],
     "color": "#E54B4B",
-    "rawUrl": "https://raw.githubusercontent.com/HypedDomi/Enmity-Stuff/main/dist/ReplaceTimestamps.js",
-    "sourceUrl": "https://github.com/HypedDomi/Enmity-Stuff/tree/main/ReplaceTimestamps",
+    "rawUrl": "https://raw.githubusercontent.com/domi-btnr/Enmity-Stuff/main/dist/ReplaceTimestamps.js",
+    "sourceUrl": "https://github.com/domi-btnr/Enmity-Stuff/tree/main/ReplaceTimestamps",
     "changelog": [
         "Fixed timestamps not being replaced in some cases"
     ],
