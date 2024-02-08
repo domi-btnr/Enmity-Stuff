@@ -1,6 +1,6 @@
 {
     "name": "SuppressEmbeds",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Allows you to Suppress/Unsuppress Embeds",
     "authors": [
         {
@@ -11,6 +11,8 @@
     "color": "#E54B4B",
     "rawUrl": "https://raw.githubusercontent.com/domi-btnr/Enmity-Stuff/main/dist/SuppressEmbeds.js",
     "sourceUrl": "https://github.com/domi-btnr/Enmity-Stuff/tree/main/SuppressEmbeds",
-    "changelog": ["Fix Crashing"],
-    "hash": "DEBUG"
+    "changelog": [
+        "Fixed Button not showing up in the Message Action Sheet (Big thanks to [@aeong.one](https://github.com/aeongdesu/) )"
+    ],
+    "hash": "539f0264fd98c92260164c2ca56fe4951650c8de"
 }
