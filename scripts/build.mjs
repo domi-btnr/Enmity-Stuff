@@ -26,6 +26,7 @@ const fetchLatestCommitHash = async () => {
 };
 
 const updateManifests = async () => {
+    plugins = plugins.length ? plugins : validPlugins;
     for (const plugin of plugins) {
         const pluginDir = join(__dirname, "..", plugin);
         const manifestPath = join(pluginDir, "manifest.json");
@@ -68,16 +69,13 @@ const updateRollupConfig = async rollupConfigPath => {
 };
 
 (async () => {
-    /*
-     * When run with Workflow it'll have args
-     * But when no plugin got changed, then dont build
-     */
-    const devBuild = !args.includes("--workflow");
-    if (!devBuild && !plugins.length) return console.log("No plugins to build");
+    const devBuild = !args.length;
+    const isManualBuild = args.includes("--workflow_dispatch");
+    if (!devBuild && !plugins.length && !isManualBuild) return console.log("No plugins to build");
     console.log(`Building ${devBuild ? "Development" : "Production"} Build`);
 
     // Update Hash of modified Plugins
-    if (plugins.length) await updateManifests();
+    if (plugins.length || isManualBuild) await updateManifests();
 
     const rollupConfigPath = join(__dirname, "..", "rollup.config.js");
     const oldConfig = await updateRollupConfig(rollupConfigPath);
