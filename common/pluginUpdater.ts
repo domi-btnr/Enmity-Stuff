@@ -47,6 +47,7 @@ const PluginUpdater = {
 
     async checkForUpdates(showNoUpdateDialog = false) {
         const resp = await fetch(`${this.rawUrl}?${Math.random()}`);
+        if (!resp.ok) return console.error(`[${this.name}] Failed to fetch remote version`);
         const content = await resp.text();
 
         const remoteHashVar = content.match(/hash:(\w+)/)?.[1];
@@ -57,10 +58,10 @@ const PluginUpdater = {
         const remoteVersionVar = content.match(/version:(\w+)/)?.[1];
         const rawRemoteVersion = content.match(new RegExp(`${remoteVersionVar}="([^,"]+)"`))?.[1];
         if (!rawRemoteVersion) console.warn(`[${this.name}] Failed to fetch remote version`);
-        else this.remoteVersion = rawRemoteVersion;
+        else this.remoteVersion = rawRemoteVersion ?? "0.0.0";
 
         const remoteChangelogVar = content.match(/changelog:(\w+)/)?.[1];
-        const rawRemoteChangelog = content.match(new RegExp(`${remoteChangelogVar}=\\[(.*?)\\]`))?.[0];
+        const rawRemoteChangelog = content.match(new RegExp(`${remoteChangelogVar}=\\["(.*?)"\\]`))?.[0];
         if (!rawRemoteChangelog) console.warn(`[${this.name}] Failed to fetch remote changelog`);
         else this.remoteChangelog = JSON.parse(rawRemoteChangelog.replace(`${remoteChangelogVar}=`, ""));
 
