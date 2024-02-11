@@ -72,8 +72,9 @@ const updateRollupConfig = async rollupConfigPath => {
      * When run with Workflow it'll have args
      * But when no plugin got changed, then dont build
      */
-    const devBuild = !args.length;
+    const devBuild = !args.includes("--workflow");
     if (!devBuild && !plugins.length) return console.log("No plugins to build");
+    console.log(`Building ${devBuild ? "Development" : "Production"} Build`);
 
     // Update Hash of modified Plugins
     if (plugins.length) await updateManifests();
