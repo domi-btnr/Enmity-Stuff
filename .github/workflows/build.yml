@@ -27,6 +27,7 @@ jobs:
               run: npm install
 
             - name: Detect changed files
+              if: "github.event_name == 'push'"
               id: files
               uses: jitterbit/get-changed-files@v1
               continue-on-error: true
