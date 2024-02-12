@@ -69,13 +69,12 @@ const updateRollupConfig = async rollupConfigPath => {
 };
 
 (async () => {
-    const devBuild = !args.length;
+    const devBuild = !args.includes("--push");
     const isManualBuild = args.includes("--workflow_dispatch");
     if (!devBuild && !plugins.length && !isManualBuild) return console.log("No plugins to build");
     console.log(`Building ${devBuild ? "Development" : "Production"} Build`);
 
-    // Update Hash of modified Plugins
-    if (plugins.length || isManualBuild) await updateManifests();
+    if (!devBuild && (plugins.length || isManualBuild)) await updateManifests();
 
     const rollupConfigPath = join(__dirname, "..", "rollup.config.js");
     const oldConfig = await updateRollupConfig(rollupConfigPath);
