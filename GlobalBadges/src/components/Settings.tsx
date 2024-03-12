@@ -150,7 +150,7 @@ export default ({ settings }: SettingsProps) => {
                 <FormSection title="Source">
                     <FormRow
                         label="Source"
-                        subLabel={`See the Source Code for ${name}`}
+                        subLabel={`View the source code for ${name}`}
                         trailing={FormRow.Arrow}
                         onPress={() => Linking.openURL(sourceUrl)}
                     />
