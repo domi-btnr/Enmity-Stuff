@@ -8,7 +8,7 @@ import pluginUpdater from "@common/pluginUpdater.ts";
 import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@GlobalBadges/manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
-import { Constants, Navigation, React, StyleSheet, Linking } from "enmity/metro/common";
+import { Constants, Linking, Navigation, React, StyleSheet } from "enmity/metro/common";
 
 interface SettingsProps {
     settings: SettingsStore;
