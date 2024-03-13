@@ -1,6 +1,6 @@
 {
     "name": "GlobalBadges",
-    "version": "1.2.6.1",
+    "version": "1.2.7",
     "description": "Adds global badges from other client mods",
     "authors": [
         {
@@ -15,5 +15,5 @@
         "Fixed Badges not appearing on Profiles",
         "Fixed Settings repository button not opening"
     ],
-    "hash": "DEBUG"
+    "hash": "f361d9535ed13801a75ce513dfbfa0652a18cd70"
 }

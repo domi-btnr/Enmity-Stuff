@@ -126,7 +126,7 @@ export default ({ settings }: SettingsProps) => {
                 <FormSection title="Updates">
                     <FormRow
                         label="Check for Updates on startup"
-                        subLabel={"Checks automatically for updates when starting GlobalBadges"}
+                        subLabel={`Checks automatically for updates when starting ${name}`}
                         trailing={
                             <FormSwitch
                                 value={settings.getBoolean("autoUpdateCheck", true)}
