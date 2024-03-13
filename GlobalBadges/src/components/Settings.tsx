@@ -8,14 +8,11 @@ import pluginUpdater from "@common/pluginUpdater.ts";
 import manifest, { authors, changelog, hash, name, sourceUrl, version } from "@GlobalBadges/manifest.json";
 import { SettingsStore } from "enmity/api/settings";
 import { FormRow, FormSection, FormSwitch, ScrollView, Text, View } from "enmity/components";
-import { getByProps } from "enmity/metro";
-import { Constants, Navigation, React, StyleSheet } from "enmity/metro/common";
+import { Constants, Linking, Navigation, React, StyleSheet } from "enmity/metro/common";
 
 interface SettingsProps {
     settings: SettingsStore;
 }
-
-const Router = getByProps("transitionToGuild", "openURL");
 
 pluginUpdater.create(manifest);
 export default ({ settings }: SettingsProps) => {
@@ -129,7 +126,7 @@ export default ({ settings }: SettingsProps) => {
                 <FormSection title="Updates">
                     <FormRow
                         label="Check for Updates on startup"
-                        subLabel={"Checks automatically for updates when starting the Plugin"}
+                        subLabel={`Checks automatically for updates when starting ${name}`}
                         trailing={
                             <FormSwitch
                                 value={settings.getBoolean("autoUpdateCheck", true)}
@@ -153,9 +150,9 @@ export default ({ settings }: SettingsProps) => {
                 <FormSection title="Source">
                     <FormRow
                         label="Source"
-                        subLabel={`See the Source Code for ${name}`}
+                        subLabel={`View the source code for ${name}`}
                         trailing={FormRow.Arrow}
-                        onPress={() => Router?.openURL(sourceUrl)}
+                        onPress={() => Linking.openURL(sourceUrl)}
                     />
                 </FormSection>
             </ScrollView>
