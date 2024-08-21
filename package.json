@@ -10,14 +10,14 @@
         "PluginTemplate/"
     ],
     "devDependencies": {
-        "@rollup/plugin-alias": "^5.0.0",
+        "@rollup/plugin-alias": "^5.1.0",
         "@rollup/plugin-commonjs": "^21.1.0",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.3.0",
         "@types/node": "^17.0.45",
-        "@typescript-eslint/parser": "^5.59.11",
+        "@typescript-eslint/parser": "^5.62.0",
         "esbuild": "^0.14.54",
-        "eslint": "^8.42.0",
+        "eslint": "^8.57.0",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-unused-imports": "^2.0.0",
         "rollup": "^2.79.1",
@@ -25,10 +25,7 @@
         "typescript": "5.0.4"
     },
     "optionalDependencies": {
-        "esbuild-darwin-64": "^0.14.54",
-        "esbuild-darwin-arm64": "^0.14.54",
-        "esbuild-linux-64": "^0.14.54",
-        "esbuild-windows-64": "^0.14.54"
+        "react-devtools": "^5.3.1"
     },
     "dependencies": {
         "enmity": "*"

@@ -1,6 +1,6 @@
 {
     "name": "ReplaceTimestamps",
-    "version": "1.2.9",
+    "version": "1.3.0",
     "description": "Replaces plaintext 24 hour timestamps into Discord's timestamps",
     "authors": [
         {
@@ -12,7 +12,15 @@
     "rawUrl": "https://raw.githubusercontent.com/domi-btnr/Enmity-Stuff/main/dist/ReplaceTimestamps.js",
     "sourceUrl": "https://github.com/domi-btnr/Enmity-Stuff/tree/main/ReplaceTimestamps",
     "changelog": [
-        "Fixed timestamps not being replaced in some cases"
+        "Improved REGEX",
+        "Support for relative Times. Use \"in 5m\" or \"2h ago\"",
+        "\"s\" for seconds",
+		"\"m\" for minutes",
+		"\"h\" for hours",
+		"\"d\" for days",
+		"\"w\" for weeks",
+		"\"mo\" for months",
+		"\"y\" for years"
     ],
     "hash": "DEBUG"
 }

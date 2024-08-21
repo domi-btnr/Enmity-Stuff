@@ -1,47 +1,45 @@
 import manifest from "@ReplaceTimestamps/manifest.json";
+import { get } from "enmity/api/settings";
 import { Plugin, registerPlugin } from "enmity/managers/plugins";
 import { Messages, React } from "enmity/metro/common";
 import { create } from "enmity/patcher";
 
 import Settings from "./components/Settings";
+import { getRelativeTime, getUnixTimestamp } from "./modules/utils";
 
 const Patcher = create(manifest.name);
 const ReplaceTimestamps: Plugin = {
     ...manifest,
     onStart() {
-        const getUnixTimestamp = time => {
-            const date = new Date()
-                .toISOString()
-                .replace(/T/, " ")
-                .replace(/\..+/, "")
-                .replace(/\d?\d:\d\d/, time);
-            const then = Math.round(new Date(date).getTime() / 1000);
-            if (isNaN(then)) return time;
-            return ` <t:${then}:t> `;
-        };
-
         Patcher.before(Messages, "sendMessage", (_, [, msg]) => {
-            const REGEX = /\b(0?[0-9]|1[0-9]|2[0-4]):([0-5][0-9])( ?[ap]m)?\b/gi;
-            if (msg.content.search(REGEX) !== -1)
-                msg.content = msg.content.replace(REGEX, (x: string) => {
-                    let hours: number, minutes: string, mode: null | "AM" | "PM";
-                    // @ts-ignore
-                    // eslint-disable-next-line prefer-const
-                    [, hours, minutes, mode] = REGEX.exec(x).map((g, i) => {
-                        if (g === undefined) return g;
-                        if (i === 1 || i === 2) return parseInt(g);
-                        if (i === 3) return g.trim().toUpperCase();
-                    });
-                    let time = `${hours}:${minutes}`;
-                    if (mode === "PM" && hours < 12 && hours !== 0) {
-                        hours += 12;
-                        minutes = minutes.toString().padStart(2, "0");
-                        time = `${hours}:${minutes}`;
-                    } else if ((mode === "AM" && hours === 12) || hours === 24) {
-                        time = `00:${minutes}`;
-                    }
-                    return getUnixTimestamp(time);
-                });
+            const timeRegex = /(?<!\d)\d{1,2}:\d{2}(?!\d)(am|pm)?/gi;
+            const timeRegexMatch = /((?<!\d)\d{1,2}:\d{2}(?!\d))(am|pm)?/i;
+
+            const dateFormat = (get(manifest.name, "dateFormat", "dd.MM.yyyy") as string).replace(/[./]/g, "[./]").replace("dd", "(\\d{2})").replace("MM", "(\\d{2})").replace("yyyy", "(\\d{4})");
+            const dateRegex = new RegExp(`${dateFormat}`, "gi");
+            const dateRegexMatch = new RegExp(`${dateFormat}`, "i");
+
+            const TimeDateRegex = new RegExp(`(${timeRegex.source})\\s+${dateRegex.source}`, "gi");
+            const DateRegexTime = new RegExp(`${dateRegex.source}\\s+(${timeRegex.source})`, "gi");
+
+            const relativeRegex = /\b(?:in\s+(\d+)([smhdw]|mo|y)|(\d+)([smhdw]|mo|y)\s+ago)\b/gi;
+            const relativeRegexMatch = /\b(?:in\s+(\d+)([smhdw]|mo|y)|(\d+)([smhdw]|mo|y)\s+ago)\b/i;
+
+            if (msg.content.search(TimeDateRegex) !== -1) {
+                msg.content = msg.content.replace(TimeDateRegex, (str: string) => getUnixTimestamp({ str, dateRegexMatch, timeRegexMatch }));
+            }
+            if (msg.content.search(DateRegexTime) !== -1) {
+                msg.content = msg.content.replace(DateRegexTime, (str: string) => getUnixTimestamp({ str, dateRegexMatch, timeRegexMatch }));
+            }
+            if (msg.content.search(timeRegex) !== -1) {
+                msg.content = msg.content.replace(timeRegex, (str: string) => getUnixTimestamp({ str, format: "t", dateRegexMatch, timeRegexMatch }));
+            }
+            if (msg.content.search(dateRegex) !== -1) {
+                msg.content = msg.content.replace(dateRegex, (str: string) => getUnixTimestamp({ str, format: "d", dateRegexMatch, timeRegexMatch }));
+            }
+            if (msg.content.search(relativeRegex) !== -1) {
+                msg.content = msg.content.replace(relativeRegex, (str: string) => getRelativeTime({ str, relativeRegexMatch }));
+            }
         });
     },
 
