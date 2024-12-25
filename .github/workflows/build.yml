@@ -16,10 +16,10 @@ jobs:
               run: rm -rf /home/runner/work/${{ github.repository }}
 
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Setup Node.js
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v4
               with:
                   node-version: 18.x
 
@@ -36,19 +36,19 @@ jobs:
               run: npm run build -- --${{ github.event_name }} ${{ steps.files.outputs.all }}
 
             - name: Stage build
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v4
               with:
                   name: build-artifact
                   path: dist
                   retention-days: 1
 
             - name: Restore repo
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
               with:
                   ref: main
 
             - name: Apply build
-              uses: actions/download-artifact@v2
+              uses: actions/download-artifact@v4
               with:
                   name: build-artifact
                   path: dist
